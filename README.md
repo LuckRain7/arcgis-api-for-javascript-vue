@@ -1,5 +1,7 @@
-# 如何在 Vue 中使用 ArcGIS API for JavaScript
+# Vue + ArcGIS API for JavaScript 教程
 
-版本信息 vue:2.6.11 | 
+版本信息 vue:2.6.11 | ArcGIS API for JavaScript: 3.32
 
-一、[arcgis api本地部署](https://mp.weixin.qq.com/s/F2eseCDNGBjoTS52UsY9MA)
+## 目录
+
+[（一）ArcGIS API for JavaScript 本地部署(开发环境)](https://luckrain7.github.io/arcgis-api-for-javascript-vue/Demo-1/)
