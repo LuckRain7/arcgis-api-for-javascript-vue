@@ -93,4 +93,4 @@
 
 您的关注是莫大的鼓励
 
-![wx](C:\Users\ZHCZ\Desktop\arcgis-api-for-javascript-vue\Demo-1\wx.png)
+![wx](./wx.png)
