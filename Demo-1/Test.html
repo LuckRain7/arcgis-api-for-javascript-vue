@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>test arcgis </title>
+    <style>
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%;
+        }
+
+        #test {
+            height: 100%;
+            width: 100%;
+        }
+    </style>
+    <link rel="stylesheet" href="http://localhost:3000/arcgis-3.32/esri/css/esri.css">
+    <script src="http://localhost:3000/arcgis-3.32/init.js"></script>
+</head>
+
+<body>
+    <div id="test">
+
+    </div>
+
+    <script>
+        require(["esri/map"], function (Map) {
+            var map = new Map("test", {
+                center: [-118, 34.5],
+                zoom: 8,
+                basemap: "topo"
+            });
+        });
+    </script>
+</body>
+
+</html>
