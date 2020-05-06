@@ -5,3 +5,7 @@
 ## 目录
 
 [（一）ArcGIS API for JavaScript 本地部署(开发环境)](https://luckrain7.github.io/arcgis-api-for-javascript-vue/Demo-1/)
+
+[（二）加载地图](https://luckrain7.github.io/arcgis-api-for-javascript-vue/Demo-2/)
+
+（三）添加常规的地图组件
