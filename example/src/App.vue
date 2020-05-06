@@ -5,26 +5,74 @@
  -->
 <template>
   <div id="app">
-    <Header />
+    <!-- 头部组件 -->
+    <my-header />
+
+    <!-- 地图主题组件 -->
     <div class="main">
       <div id="map"></div>
     </div>
+
+    <!-- 工具条组件 -->
+    <tool-bar
+      @measurement="measurement"
+      @baseMapChange="baseMapChange"
+      @plot="plot"
+      @showLegend="showLegend"
+      @showLayerList="showLayerList"
+    ></tool-bar>
+
+    <!-- 测量组件 -->
+    <measurement :show.sync="isShowMeasurement"></measurement>
   </div>
 </template>
 
 <script>
-import Header from "./components/Header.vue";
+import MyHeader from "./components/Header.vue";
+import ToolBar from "./components/ToolBar.vue";
+import Measurement from "./components/Measurement.vue";
 
 // 引入 ArcGIS 模块，并进行实例化
 import ArcGIS from "./map/init.js";
 let Map = new ArcGIS();
 export default {
   name: "App",
-  components: {
-    Header,
-  },
+
   mounted() {
     Map.init("map"); // 初始化地图模块
+  },
+  methods: {
+    // 测量
+    measurement() {
+      this.isShowMeasurement = true;
+      console.log("measurement");
+    },
+    /* 地图切换 */
+    baseMapChange(type) {
+      Map.baseMapChange(type);
+    },
+    // 标绘
+    plot(type) {
+      console.log("标绘", type);
+    },
+    // 显示图例
+    showLegend() {
+      console.log("开启图例");
+    },
+    // 显示图层
+    showLayerList() {
+      console.log("开启图层");
+    },
+  },
+  data() {
+    return {
+      isShowMeasurement: false, // 测量窗口
+    };
+  },
+  components: {
+    MyHeader,
+    ToolBar,
+    Measurement,
   },
 };
 </script>

@@ -13,6 +13,7 @@ class ArcGIS {
   constructor() {
     this.map = null; // 地图
     this.baseMap = null; // 地图底图
+    this.measurement = null;
   }
 
   init($el) {
@@ -71,15 +72,15 @@ class ArcGIS {
           this.map.addLayer(this.baseMap.vectorMap, 0);
 
           // 测量工具
-          let measurement = new Measurement(
+          this.measurement = new Measurement(
             {
               map: this.map,
               defaultLengthUnit: Units.KILOMETERS,
               defaultAreaUnit: Units.SQUARE_KILOMETERS,
             },
-            document.getElementById("measureResult")
+            document.getElementById("measurement")
           );
-          measurement.startup();
+          this.measurement.startup();
         }
       ) //end
       .catch((err) => {
@@ -87,15 +88,20 @@ class ArcGIS {
       });
   }
 
-  baseMapChange() {
-    if (this.baseMap.type === 1) {
+  baseMapChange(type) {
+    if (type === this.baseMap.type) return; // 防止重复加载
+
+    // 添加 影像
+    if (type === 2) {
       this.addLayer(
         [this.baseMap.rasterMap, this.baseMap.rasterMapAnnotation],
         [0, 1]
       );
       this.removeLayer(this.baseMap.vectorMap);
       this.baseMap.type = 2;
-    } else {
+    }
+    // 添加 矢量
+    else {
       this.addLayer(this.baseMap.vectorMap, 0);
       this.removeLayer([
         this.baseMap.rasterMap,
