@@ -12,94 +12,126 @@
 
 ```vue
 <template>
-  <div id="app">
-    <!-- 头部组件 -->
-    <my-header />
+  <div class="toolbar">
+    <!-- 使用按钮组 -->
+    <a-button-group>
+      <!-- 地图切换按钮 -->
+      <a-dropdown>
+        <a-menu slot="overlay">
+          <a-menu-item key="1" @click="baseMapChange(1)">
+            矢量
+          </a-menu-item>
+          <a-menu-item key="2" @click="baseMapChange(2)">
+            影像
+          </a-menu-item>
+        </a-menu>
+        <a-button type="primary">
+          <a-icon type="global" />底图 <a-icon type="down" />
+        </a-button>
+      </a-dropdown>
+      <!-- 地图切换按钮 END-->
 
-    <!-- 地图主题组件 -->
-    <div class="main">
-      <div id="map"></div>
-    </div>
+      <a-dropdown>
+        <a-menu slot="overlay">
+          <a-menu-item key="1" @click="measurement(1)">
+            开始测量
+          </a-menu-item>
+          <a-menu-item key="2" @click="measurement(0)">
+            取消测量
+          </a-menu-item>
+        </a-menu>
+        <a-button type="primary">
+          <a-icon type="tool" />测量 <a-icon type="down" />
+        </a-button>
+      </a-dropdown>
 
-    <!-- 工具条组件 -->
-    <tool-bar
-      @measurement="measurement"
-      @baseMapChange="baseMapChange"
-      @draw="draw"
-      @showLegend="showLegend"
-      @showLayerList="showLayerList"
-    ></tool-bar>
+      <!-- 标绘 GO-->
+      <a-dropdown>
+        <a-menu slot="overlay">
+          <a-menu-item key="1" @click="draw('POINT')">
+            点
+          </a-menu-item>
+          <a-menu-item key="2" @click="draw('POLYLINE')">
+            线
+          </a-menu-item>
+          <a-menu-item key="3" @click="draw('POLYGON')">
+            面
+          </a-menu-item>
+          <a-menu-item key="4" @click="draw('CIRCLE')">
+            圆形
+          </a-menu-item>
+          <a-menu-item key="5" @click="draw('RECTANGLE')">
+            长方形
+          </a-menu-item>
+          <a-menu-item key="6" @click="draw('stop')">
+            停止标绘
+          </a-menu-item>
+          <a-menu-item key="7" @click="draw('delete')">
+            清除标绘
+          </a-menu-item>
+        </a-menu>
+        <a-button type="primary">
+          <a-icon type="highlight" />标绘 <a-icon type="down" />
+        </a-button>
+      </a-dropdown>
+      <!-- 标绘 END-->
+
+      <a-button type="primary" @click="showLegend">
+        <a-icon type="unordered-list" />图例
+      </a-button>
+
+      <a-button type="primary" @click="showLayerList">
+        <a-icon type="database" />图层
+      </a-button>
+    </a-button-group>
   </div>
 </template>
 
 <script>
-import MyHeader from "./components/Header.vue";
-import ToolBar from "./components/ToolBar.vue";
-
-// 引入 ArcGIS 模块，并进行实例化
-import ArcGIS from "./map/init.js";
-let Map = new ArcGIS();
 export default {
-  name: "App",
-
-  mounted() {
-    Map.init("map"); // 初始化地图模块
-  },
+  name: "ToolBar",
   methods: {
-    measurement() {
-      console.log("measurement");
+    // 开启测量
+    measurement(type) {
+      this.$emit("measurement", type);
     },
-    /* 地图切换 */
+    // 底图切换
     baseMapChange(type) {
-      console.log("切换地图底图：", type);
+      this.$emit("baseMapChange", type);
     },
     // 标绘
     draw(type) {
-      console.log("标绘", type);
+      this.$emit("draw", type);
     },
     // 显示图例
     showLegend() {
-      console.log("开启图例");
+      this.$emit("showLegend");
     },
     // 显示图层
     showLayerList() {
-      console.log("开启图层");
+      this.$emit("showLayerList");
     },
-  },
-  components: {
-    MyHeader,
-    ToolBar,
   },
 };
 </script>
 
 <style lang="less">
-html,
-body {
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  height: 100%;
-}
-
-.main {
+.toolbar {
   position: absolute;
-  top: 70px;
-  bottom: 0;
-  width: 100%;
-
-  #map {
-    width: 100%;
-    height: 100%;
-  }
+  top: 80px;
+  right: 40px;
+  height: 40px;
+  width: auto;
+  z-index: 99;
 }
 </style>
-
 ```
 
 在 src\App.vue 显示页面引入，并提供组件通讯接口
 
 ```vue
+<template>
+<!-- 工具条组件 -->
 <tool-bar
   @measurement="measurement"
   @baseMapChange="baseMapChange"
@@ -107,30 +139,37 @@ body {
   @showLegend="showLegend"
   @showLayerList="showLayerList"
 ></tool-bar>
+
+<!-- 测量组件 -->
+<measurement
+  :show="isShowMeasurement"
+  @closMmeasurement="measurement"
+></measurement>
+</template>
 <script>
 import ToolBar from "./components/ToolBar.vue";
 components: {
   ToolBar
 },
 methods: {
-  measurement() {
-    console.log("measurement");
+  // 测量
+  measurement(type) {
+    switch (type) {
+      case 0:
+        this.isShowMeasurement = false;
+        Map.MeasurementClose();
+        break;
+      case 1:
+        this.isShowMeasurement = true;
+    }
   },
   /* 地图切换 */
   baseMapChange(type) {
-    console.log("切换地图底图：", type);
+    Map.baseMapChange(type);
   },
   // 标绘
   draw(type) {
-    console.log("标绘", type);
-  },
-  // 显示图例
-  showLegend() {
-    console.log("开启图例");
-  },
-  // 显示图层
-  showLayerList() {
-    console.log("开启图层");
+    Map.drawActive(type);
   },
 },
 </script>
