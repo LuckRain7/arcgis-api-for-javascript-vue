@@ -17,7 +17,7 @@
     <tool-bar
       @measurement="measurement"
       @baseMapChange="baseMapChange"
-      @plot="plot"
+      @draw="draw"
       @showLegend="showLegend"
       @showLayerList="showLayerList"
     ></tool-bar>
@@ -27,6 +27,8 @@
       :show="isShowMeasurement"
       @closMmeasurement="measurement"
     ></measurement>
+
+    
   </div>
 </template>
 
@@ -36,7 +38,7 @@ import ToolBar from "./components/ToolBar.vue";
 import Measurement from "./components/Measurement.vue";
 
 // 引入 ArcGIS 模块，并进行实例化
-import ArcGIS from "./map/init.js";
+import ArcGIS from "./map/index.js";
 let Map = new ArcGIS();
 export default {
   name: "App",
@@ -61,8 +63,8 @@ export default {
       Map.baseMapChange(type);
     },
     // 标绘
-    plot(type) {
-      console.log("标绘", type);
+    draw(type) {
+      Map.drawActive(type);
     },
     // 显示图例
     showLegend() {

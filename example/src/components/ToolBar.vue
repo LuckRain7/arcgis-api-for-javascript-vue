@@ -40,25 +40,25 @@
       <!-- 标绘 GO-->
       <a-dropdown>
         <a-menu slot="overlay">
-          <a-menu-item key="1" @click="plot('point')">
+          <a-menu-item key="1" @click="draw('POINT')">
             点
           </a-menu-item>
-          <a-menu-item key="2" @click="plot('line')">
+          <a-menu-item key="2" @click="draw('POLYLINE')">
             线
           </a-menu-item>
-          <a-menu-item key="3" @click="plot('surface')">
+          <a-menu-item key="3" @click="draw('POLYGON')">
             面
           </a-menu-item>
-          <a-menu-item key="4" @click="plot('circle')">
+          <a-menu-item key="4" @click="draw('CIRCLE')">
             圆形
           </a-menu-item>
-          <a-menu-item key="5" @click="plot('square')">
+          <a-menu-item key="5" @click="draw('RECTANGLE')">
             长方形
           </a-menu-item>
-          <a-menu-item key="6" @click="plot('stop')">
+          <a-menu-item key="6" @click="draw('stop')">
             停止标绘
           </a-menu-item>
-          <a-menu-item key="7" @click="plot('delete')">
+          <a-menu-item key="7" @click="draw('delete')">
             清除标绘
           </a-menu-item>
         </a-menu>
@@ -92,8 +92,8 @@ export default {
       this.$emit("baseMapChange", type);
     },
     // 标绘
-    plot(type) {
-      this.$emit("plot", type);
+    draw(type) {
+      this.$emit("draw", type);
     },
     // 显示图例
     showLegend() {
