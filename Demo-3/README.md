@@ -25,7 +25,7 @@
     <tool-bar
       @measurement="measurement"
       @baseMapChange="baseMapChange"
-      @plot="plot"
+      @draw="draw"
       @showLegend="showLegend"
       @showLayerList="showLayerList"
     ></tool-bar>
@@ -54,7 +54,7 @@ export default {
       console.log("切换地图底图：", type);
     },
     // 标绘
-    plot(type) {
+    draw(type) {
       console.log("标绘", type);
     },
     // 显示图例
@@ -103,7 +103,7 @@ body {
 <tool-bar
   @measurement="measurement"
   @baseMapChange="baseMapChange"
-  @plot="plot"
+  @draw="draw"
   @showLegend="showLegend"
   @showLayerList="showLayerList"
 ></tool-bar>
@@ -121,7 +121,7 @@ methods: {
     console.log("切换地图底图：", type);
   },
   // 标绘
-  plot(type) {
+  draw(type) {
     console.log("标绘", type);
   },
   // 显示图例
@@ -314,7 +314,181 @@ export default {
 
 
 
-## 3. 标绘组件
+## 3.  比例尺组件
+
+这里需要在 src\map\init.js 中加载 ArcGIS 的比例尺模块(`"esri/dijit/Scalebar"`)
+
+ps: 模块与下方的导出函数一定要一一对应
+
+```diff
+loadModules(
+  [
++    "esri/dijit/Scalebar",
+  ],
+  config.loadConfig
+)
+  .then(
+    ([
++      Scalebar, // 比例尺模块
+    ])
+```
+
+初始化比例尺
+
+```javascript
+Scalebar({
+  map: this.map,
+  attachTo: "bottom-left",
+  scalebarUnit: "metric",
+  scalebarStyle: "line",
+});
+```
 
 
 
+## 4. 标绘组件
+
+非常抱歉，写到这里时我重构了代码，大家可以去代码仓库进行查看，重构的目的是为了更加的模块化。
+
+这里需要在 src\map\modules\draw.js 中加载 ArcGIS 的画图模块、点样式模块、线样式模块、填充样式模块、图形模块和图形图层模块(`"esri/toolbars/draw"`、`"esri/symbols/SimpleMarkerSymbol"`、`"esri/symbols/SimpleLineSymbol"`、`"esri/symbols/SimpleFillSymbol"`、`"esri/graphic"`、`"esri/layers/GraphicsLayer"`)
+
+```javascript
+/*
+ *  Description: 标绘工具
+ *  Author: LuckRain7
+ *  Date: 2020-05-07 17:05:55
+ */
+import { loadModules } from "esri-loader";
+import config from "../config";
+
+function drawInit() {
+  loadModules(
+    [
+      "esri/toolbars/draw", // 画图
+      "esri/symbols/SimpleMarkerSymbol", // 点
+      "esri/symbols/SimpleLineSymbol", // 线
+      "esri/symbols/SimpleFillSymbol", // 面
+      "esri/graphic", // 图形模块
+      "esri/layers/GraphicsLayer", // 图形图层模块
+    ],
+    config.loadConfig
+  )
+    .then(
+      ([
+        Draw,
+        SimpleMarkerSymbol,
+        SimpleLineSymbol,
+        SimpleFillSymbol,
+        Graphic,
+        GraphicsLayer,
+      ]) => {
+        this.GraphicsLayer = GraphicsLayer;
+        this.Graphic = Graphic;
+        this.Draw = Draw;
+        this.SimpleMarkerSymbol = SimpleMarkerSymbol;
+        this.SimpleLineSymbol = SimpleLineSymbol;
+        this.SimpleFillSymbol = SimpleFillSymbol;
+
+        // 添加图形图层
+        this.DrawGraphics = new GraphicsLayer({ id: "drawLayer" });
+        // 设置图层坐标系
+        this.DrawGraphics.SpatialReference = new this.SpatialReference({
+          wkid: 4490,
+        });
+        // 将图层加载到地图上，图层设置为 7
+        this.map.addLayer(this.DrawGraphics, 7);
+
+        // 实例化画图
+        this.draw = new Draw(this.map);
+
+        //定义图形样式
+        this.draw.markerSymbol = new SimpleMarkerSymbol();
+        this.draw.lineSymbol = new SimpleLineSymbol();
+        this.draw.fillSymbol = new SimpleFillSymbol();
+
+        // 添加画图的监听事件
+        this.draw.on("draw-complete", drawEndEvent.bind(this));
+      }
+    )
+    .catch((err) => {
+      console.error(err);
+    });
+}
+
+// 内置函数 画完后将图形加载到图形图层
+function drawEndEvent(evt) {
+  //添加图形到地图
+  let symbol;
+  if (evt.geometry.type === "point" || evt.geometry.type === "multipoint") {
+    symbol = this.draw.markerSymbol;
+  } else if (evt.geometry.type === "line" || evt.geometry.type === "polyline") {
+    symbol = this.draw.lineSymbol;
+  } else {
+    symbol = this.draw.fillSymbol;
+  }
+  // 获取图形样式
+  let tx = this.Graphic(evt.geometry, symbol);
+  // 将图形样式加载到地图上
+  this.DrawGraphics.add(tx);
+}
+
+// 设置说话图形
+function drawActive(type) {
+  let tool = null;
+  switch (type) {
+    case "POINT":
+      tool = "POINT";
+      break;
+    case "POLYLINE":
+      tool = "POLYLINE";
+      break;
+    case "POLYGON":
+      tool = "POLYGON";
+      break;
+    case "CIRCLE":
+      tool = "CIRCLE";
+      break;
+    case "RECTANGLE":
+      tool = "RECTANGLE";
+      break;
+    case "stop":
+      this.draw.deactivate(); // 停止画图
+      break;
+    case "delete":
+      this.draw.deactivate(); // 停止画图
+      this.DrawGraphics.clear(); // 清除图层
+      break;
+  }
+  if (tool !== null) {
+    this.draw.activate(this.Draw[tool]); //激活对应的绘制工具
+  }
+}
+
+export { drawInit, drawActive };
+```
+
+在 导出文件中引入 src\map\index.js
+
+```javascript
+import { MeasurementClose } from "./modules/Measurement.js";
+
+// 导入标绘功能
+ArcGIS.prototype.drawInit = drawInit;
+ArcGIS.prototype.drawActive = drawActive;
+```
+
+在组件中使用即可
+
+效果图：
+
+![](./draw.gif)
+
+####  推荐阅读
+
+- [vue + ArcGIS 地图应用系列二：加载地图](https://mp.weixin.qq.com/s/KkTU1Y1GHLmsslTlwxGeIw)
+
+- [vue + ArcGIS 地图应用系列一：arcgis api本地部署(开发环境)](https://mp.weixin.qq.com/s/F2eseCDNGBjoTS52UsY9MA)
+
+#### 关注我！ 不迷路
+
+![](./wx.png)
