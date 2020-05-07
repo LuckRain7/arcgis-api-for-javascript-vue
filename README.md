@@ -8,4 +8,4 @@
 
 [（二）加载地图](https://luckrain7.github.io/arcgis-api-for-javascript-vue/Demo-2/)
 
-（三）添加常规的地图组件
+[（三）添加常规的地图组件(底图切换、测量工具、比例尺、标绘工具)]((https://luckrain7.github.io/arcgis-api-for-javascript-vue/Demo-3/))
