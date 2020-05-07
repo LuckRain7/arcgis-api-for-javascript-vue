@@ -23,7 +23,10 @@
     ></tool-bar>
 
     <!-- 测量组件 -->
-    <measurement :show.sync="isShowMeasurement"></measurement>
+    <measurement
+      :show="isShowMeasurement"
+      @closMmeasurement="measurement"
+    ></measurement>
   </div>
 </template>
 
@@ -43,9 +46,15 @@ export default {
   },
   methods: {
     // 测量
-    measurement() {
-      this.isShowMeasurement = true;
-      console.log("measurement");
+    measurement(type) {
+      switch (type) {
+        case 0:
+          this.isShowMeasurement = false;
+          Map.MeasurementClose();
+          break;
+        case 1:
+          this.isShowMeasurement = true;
+      }
     },
     /* 地图切换 */
     baseMapChange(type) {

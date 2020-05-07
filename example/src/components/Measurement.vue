@@ -16,17 +16,12 @@
 <script>
 export default {
   name: "Measurement",
-  data() {
-    return {
-      // show: true,
-    };
-  },
   props: {
     show: Boolean,
   },
   methods: {
     close() {
-      this.show = false;
+      this.$emit("closMmeasurement", 0);
     },
   },
 };

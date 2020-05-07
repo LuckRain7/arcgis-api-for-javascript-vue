@@ -71,7 +71,7 @@ class ArcGIS {
           });
           this.map.addLayer(this.baseMap.vectorMap, 0);
 
-          // 测量工具
+          // 测量工具初始化
           this.measurement = new Measurement(
             {
               map: this.map,
@@ -86,6 +86,14 @@ class ArcGIS {
       .catch((err) => {
         console.error(err);
       });
+  }
+
+  // 关闭测量工具
+  MeasurementClose() {
+    this.measurement.clearResult(); // 清除测量图案
+    // 拿到开启的工具名称 并关闭已开启的工具
+    this.measurement.getTool() &&
+      this.measurement.setTool(this.measurement.getTool().toolName, false);
   }
 
   baseMapChange(type) {
