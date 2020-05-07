@@ -196,13 +196,7 @@ baseMapChange(type) {
 
 ## 2.  测量组件
 
-首先在页面创建一个 div 用来展示测量组件
-
-
-
-
-
-这里需要在 example\src\map\init.js 中加载 ArcGIS 的测量和单位模块(`"esri/dijit/Measurement"`、` "esri/units"`)
+这里需要在 src\map\init.js 中加载 ArcGIS 的测量和单位模块(`"esri/dijit/Measurement"`、` "esri/units"`)
 
 ps: 模块与下方的导出函数一定要一一对应
 
@@ -236,25 +230,87 @@ loadModules(
     ])
 ```
 
-并进行相关配置
+并进行相关配置 example\src\map\init.js（以下是增量代码，不是文件中实际位置）
 
 ```javascript
-#  position: example\src\map\init.js
-// 测量工具
-let measurement = new Measurement(
+// 测量工具初始化
+this.measurement = new Measurement(
   {
     map: this.map,
     defaultLengthUnit: Units.KILOMETERS,
     defaultAreaUnit: Units.SQUARE_KILOMETERS,
   },
-  document.getElementById("measureResult")
+  document.getElementById("measurement")
 );
-measurement.startup();
+this.measurement.startup();
+
+// 关闭测量工具
+MeasurementClose() {
+  this.measurement.clearResult(); // 清除地图图案
+  // 拿到开启的工具名称 并关闭已开启的工具
+  this.measurement.getTool() &&
+    this.measurement.setTool(this.measurement.getTool().toolName, false);
+}
 ```
 
+创建一个用来展示测量组件 src\components\Measurement.vue
 
+```vue
+<template>
+  <div class="measurementdiv" v-show="show">
+    <div class="div-header">
+      <span class="title">测量组件</span>
+      <span class="close" @click="close">X</span>
+    </div>
+    <div id="measurement"></div>
+  </div>
+</template>
 
+<script>
+export default {
+  name: "Measurement",
+  props: {
+    show: Boolean,
+  },
+  methods: {
+    close() {
+      this.$emit("closMmeasurement", 0);
+    },
+  },
+};
+</script>
+```
 
+在页面中引入 src\App.vue
+
+```vue
+<template>
+<!-- 测量组件 -->
+<measurement
+  :show="isShowMeasurement"
+  @closMmeasurement="measurement"
+></measurement>
+</template>
+<script>
+  methods: {
+    // 测量
+    measurement(type) {
+      switch (type) {
+        case 0:
+          this.isShowMeasurement = false;
+          Map.MeasurementClose();
+          break;
+        case 1:
+          this.isShowMeasurement = true;
+      }
+    },
+  }
+</script>
+```
+
+效果图：
+
+![](./measurement .gif)
 
 
 
