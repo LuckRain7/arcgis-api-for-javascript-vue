@@ -10,7 +10,9 @@
 
 [（3）添加常规的地图组件(底图切换、测量工具、比例尺、标绘工具)](https://luckrain7.github.io/arcgis-api-for-javascript-vue/Demo-3/)
 
-（4）加载 ArcGIS Server 地图服务
+[（4）加载 ArcGIS Server 地图服务](https://luckrain7.github.io/arcgis-api-for-javascript-vue/Demo-4/)
 
-（5）
+（5） 实现热力图
+
+（5） 实现缓冲区分析
 
