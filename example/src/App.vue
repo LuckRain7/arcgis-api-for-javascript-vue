@@ -28,7 +28,7 @@
       @closMmeasurement="measurement"
     ></measurement>
 
-    
+    <layer-nav-menu></layer-nav-menu>
   </div>
 </template>
 
@@ -36,6 +36,7 @@
 import MyHeader from "./components/Header.vue";
 import ToolBar from "./components/ToolBar.vue";
 import Measurement from "./components/Measurement.vue";
+import LayerNavMenu from "./components/LayerNavMenu.vue";
 
 // 引入 ArcGIS 模块，并进行实例化
 import ArcGIS from "./map/index.js";
@@ -84,6 +85,7 @@ export default {
     MyHeader,
     ToolBar,
     Measurement,
+    LayerNavMenu,
   },
 };
 </script>

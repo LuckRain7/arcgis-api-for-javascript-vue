@@ -9,7 +9,7 @@
 
 import { loadModules, loadCss } from "esri-loader"; // 异步加载模块
 import config from "./config"; // 配置项
-import { DataType } from "../utils/index"; // 工具函数
+import serverUrl from "../../server.url.config";
 
 function ArcGIS() {
   this.map = null; // 地图
@@ -24,6 +24,7 @@ function ArcGIS() {
   this.SimpleMarkerSymbol = null;
   this.SimpleLineSymbol = null;
   this.SimpleFillSymbol = null;
+  this.ArcGISDynamicMapServiceLayer = null;
 }
 
 ArcGIS.prototype.init = function init($el) {
@@ -42,6 +43,7 @@ ArcGIS.prototype.init = function init($el) {
       "esri/units",
       "dojo/parser",
       "esri/dijit/Scalebar",
+      "esri/layers/ArcGISDynamicMapServiceLayer",
     ],
     config.loadConfig
   )
@@ -57,8 +59,10 @@ ArcGIS.prototype.init = function init($el) {
         Units, // 单位模块
         Parser, // 样式解析模块
         Scalebar, // 比例尺模块
+        ArcGISDynamicMapServiceLayer, // ArcGIS Server REST API公开的动态地图服务资源
       ]) => {
         this.SpatialReference = SpatialReference;
+        this.ArcGISDynamicMapServiceLayer = ArcGISDynamicMapServiceLayer;
         this.baseMap = {
           vectorMap: new SDTDTLayer(), //矢量
           rasterMap: new SDRasterLayer(), //影像
@@ -85,7 +89,9 @@ ArcGIS.prototype.init = function init($el) {
         });
         this.map.addLayer(this.baseMap.vectorMap, 0);
 
-        // 测量工具初始化
+        // ----------------------------
+        // ------ 测量工具初始化 -------
+        // ----------------------------
         this.measurement = new Measurement(
           {
             map: this.map,
@@ -106,57 +112,36 @@ ArcGIS.prototype.init = function init($el) {
 
         // 初始化标绘工具
         this.drawInit();
+
+        // ---------------------------------
+        // ---------添加地图边界-------------
+        // ---------------------------------
+        // 1.通过 ArcGISDynamicMapServiceLayer 类进行导入
+        const bianjieMapServer = new this.ArcGISDynamicMapServiceLayer(
+          serverUrl().bianjie,
+          {
+            id: "bianjie", // 设置 id
+            opacity: 1, // 设置地图服务的透明度
+          }
+        );
+
+        this.map.addLayer(bianjieMapServer, 3); // 2.通过 map.addLayer 函数 加载到地图上
+
+        const hezuosheMapServer = new this.ArcGISDynamicMapServiceLayer(
+          serverUrl().huinong.hezuoshe,
+          {
+            id: "hezuoshe",
+            opacity: 1,
+          }
+        );
+        this.map.addLayer(hezuosheMapServer, 4);
+
+        console.log(this.map);
       }
     ) //end
     .catch((err) => {
       console.error(err);
     });
-};
-
-
-
-// 切换地图底图
-ArcGIS.prototype.baseMapChange = function baseMapChange(type) {
-  if (type === this.baseMap.type) return; // 防止重复加载
-
-  // 添加 影像
-  if (type === 2) {
-    this.addLayer(
-      [this.baseMap.rasterMap, this.baseMap.rasterMapAnnotation],
-      [0, 1]
-    );
-    this.removeLayer(this.baseMap.vectorMap);
-    this.baseMap.type = 2;
-  }
-  // 添加 矢量
-  else {
-    this.addLayer(this.baseMap.vectorMap, 0);
-    this.removeLayer([
-      this.baseMap.rasterMap,
-      this.baseMap.rasterMapAnnotation,
-    ]);
-    this.baseMap.type = 1;
-  }
-};
-
-/*
- *  description:  添加图层
- *  param {Layer,Array<Layer>} layer  需添加的图层
- *  param {number,Array<number>} lever 添加图层的层数
- */
-ArcGIS.prototype.addLayer = function addLayer(layer, lever) {
-  // 判断是
-  if (DataType(layer, "array")) {
-    layer.forEach((item, index) => {
-      lever ? this.map.addLayer(item, lever[index]) : this.map.addLayer(item);
-    });
-  } else {
-    lever ? this.map.addLayer(layer, lever) : this.map.addLayer(layer);
-  }
-};
-
-ArcGIS.prototype.removeLayer = function removeLayer(layer) {
-  this.map.removeLayer(layer);
 };
 
 export default ArcGIS;
