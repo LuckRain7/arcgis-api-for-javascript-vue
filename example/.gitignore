@@ -2,6 +2,7 @@
 node_modules
 /dist
 server.url.config.js
+template.js
 
 # local env files
 .env.local
