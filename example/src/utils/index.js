@@ -2,11 +2,9 @@
  *  Description:
  *  Author: LuckRain7
  *  Date: 2020-05-06 11:28:32
- */
-/*
  *
- *
- *  lowObjToArray | 把对象转换成数组(浅转换)
+ * lowObjToArray | 把对象转换成数组(浅转换)
+ * DataType | 判断数据类型
  */
 
 /*
