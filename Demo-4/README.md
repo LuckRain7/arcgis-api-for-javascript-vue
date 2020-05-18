@@ -35,11 +35,13 @@ loadModules(
 // 添加地图边界
 // 通过 ArcGISDynamicMapServiceLayer 类进行导入
 const bianjieMapServer = new this.ArcGISDynamicMapServiceLayer(
-  'https://arcgisserver:6080/arcgis/rest/services/bianjie/MapServer'
+  'https://arcgisserver:6080/arcgis/rest/services/bianjiexian/MapServer'
 );
 // 通过 map.addLayer 函数 加载到地图上
 this.map.addLayer(bianjieMapServer, 3);
 ```
 
 ### 2.1  复杂服务引入
+
+创建图层列表组件
 
