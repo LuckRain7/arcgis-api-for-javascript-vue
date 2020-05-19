@@ -17,7 +17,9 @@
 
 > 多图层多要素查询
 >
-> 代码地址：[ https://github.com/LuckRain7/arcgis-api-for-javascript-vue/blob/master/Demo-5/src/IdentifyTask-init.js ]( https://github.com/LuckRain7/arcgis-api-for-javascript-vue/blob/master/Demo-5/src/IdentifyTask-init.js )
+> 代码地址：<a href="https://github.com/LuckRain7/arcgis-api-for-javascript-vue/blob/master/Demo-5/src/IdentifyTask-init.js"  target="_blank" >https://github.com/LuckRain7/arcgis-api-for-javascript-vue/blob/master/Demo-5/src/IdentifyTask-init.js<a>
+>
+> 
 
 在 src\map\init.js 中引入`IdentifyTask`、 `IdentifyParameters` 两个模块
 
