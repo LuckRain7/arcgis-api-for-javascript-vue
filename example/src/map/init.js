@@ -182,54 +182,8 @@ ArcGIS.prototype.init = function init($el) {
         // ! 单 on("Load",xx) 不执行(原因待查)
         this.map.on("Load", mapReady);
         this.map.onLoad();
-        let toolBar;
 
-        function mapReady() {
-          //定义一个绘图工具
-          toolBar = new that.Draw(that.map);
-          toolBar.activate(that.Draw.CIRCLE);
-          toolBar.on("draw-complete", drawEnd);
-        }
-
-        function drawEnd(event) {
-          //获得绘图得到的面
-          let geometry = event.geometry;
-          //关闭绘图工具
-          toolBar.deactivate();
-
-          // 设置查询
-          let queryTask = new QueryTask(hezuosheUrl + "/0"); // 创建查询对象，需拼接查询图层id编号
-          let query = new Query(); // 创建查询参数对象
-          query.geometry = geometry; // 空间查询的几何对象
-          query.outFields = ["*"]; // 服务器返回字段 *:all
-          query.outSpatialReference = thatMap.spatialReference; // 空间参考信息
-          query.spatialRelationship = Query.SPATIAL_REL_INTERSECTS; // 设置查询的标准
-          query.returnGeometry = true; // 是否返回几何信息
-
-          //执行空间查询
-          const deferred = queryTask
-            .execute(query)
-            .addCallback(function(result) {
-              const { features } = result;
-              if (features.length < 1) return;
-              console.log(features);
-
-              return features.map((item, index) => {
-                // 设置信息弹窗模板内容
-                let info = new InfoTemplate("Attributes" + index, "${*}");
-                item.setInfoTemplate(info);
-                return item;
-              });
-            });
-          console.log(deferred);
-
-          // 设置弹窗显示
-          thatMap.infoWindow.setFeatures([deferred]);
-          thatMap.infoWindow.show(event.mapPoint);
-        }
-
-        // console.log(this.map);
-        // console.log(this.map === thatMap);
+        function mapReady() {}
       }
     ) //end
     .catch((err) => {
