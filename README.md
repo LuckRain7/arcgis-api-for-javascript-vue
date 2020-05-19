@@ -12,6 +12,6 @@
 
 [（4）加载 ArcGIS Server 地图服务](https://github.com/LuckRain7/arcgis-api-for-javascript-vue/tree/master/Demo-4)（复杂服务引入暂时停滞，防止影响整体进度）
 
-[（5）实现 ArcGIS Server 地图服务信息查询](https://github.com/LuckRain7/arcgis-api-for-javascript-vue/tree/master/Demo-5)
+[（5）实现 ArcGIS Server 地图服务信息查询 - 空间查询](https://github.com/LuckRain7/arcgis-api-for-javascript-vue/tree/master/Demo-5)
 
 （5） 实现缓冲区分析

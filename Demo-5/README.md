@@ -1,19 +1,15 @@
-# 🌍 五、实现 ArcGIS Server 地图服务信息查询
+# 🌍 五、实现 ArcGIS Server 地图服务信息查询 - 空间查询
 
 上一讲中我们引入了地图服务，这一讲我们了解如何对服务进行信息查询。
 
 **信息查询分为两个类**
 
-- 空间查询：点击地图查询信息。（ `QueryTask`,`IdentifyTask`  ）
+- 空间查询：点击地图查询对应区域的要素信息。（ `QueryTask`,`IdentifyTask`  ）
 - 属性查询：通过对某个属性进行模糊匹配，在地图显示对应元素。（ `FindTask `）
 
-## 1.  空间查询
+## 1.1  IdentifyTask
 
-点击地图上某个信息点，显示对应的要素信息
-
-### 1.1  IdentifyTask
-
-> 多图层多要素查询
+> 单服务多图层多要素查询（一个地图服务里边可查询多个图层多个要素）
 >
 > 代码地址：[https://github.com/LuckRain7/arcgis-api-for-javascript-vue/blob/master/Demo-5/src/IdentifyTask-init.js](https://github.com/LuckRain7/arcgis-api-for-javascript-vue/blob/master/Demo-5/src/IdentifyTask-init.js)
 
@@ -24,6 +20,7 @@ loadModules(
   [
 +    "esri/tasks/IdentifyTask",
 +    "esri/tasks/IdentifyParameters",
++    "esri/InfoTemplate",
   ],
   config.loadConfig
 )
@@ -31,6 +28,7 @@ loadModules(
     ([
 +      IdentifyTask, // IdentifyTask 空间查询
 +      IdentifyParameters,// IdentifyTask 空间查询参数
++      InfoTemplate, // 信息弹窗模板
     ])
 ```
 
@@ -99,4 +97,16 @@ function mapReady() {
     thatMap.infoWindow.show(event.mapPoint);
   }
 ```
+
+效果：（💛动图较大，请耐心等待）
+
+![](https://luckrain7.github.io/arcgis-api-for-javascript-vue/Demo-5/IdentifyTask.gif)
+
+## 1.2  QueryTask
+
+TODO
+
+
+
+
 
