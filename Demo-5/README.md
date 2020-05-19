@@ -1,4 +1,6 @@
-# 🌍vue + ArcGIS 地图应用系列五:实现 ArcGIS Server 地图服务信息查询
+# 🌍 vue + ArcGIS 地图应用系列五:
+
+# 🌍 实现 ArcGIS Server 地图服务信息查询
 
 上一讲中我们引入了地图服务，这一讲我们了解如何对服务进行信息查询。
 
@@ -15,7 +17,7 @@
 
 > 多图层多要素查询
 >
-> 源码地址：
+> 代码地址：[ https://github.com/LuckRain7/arcgis-api-for-javascript-vue/blob/master/Demo-5/src/IdentifyTask-init.js ]( https://github.com/LuckRain7/arcgis-api-for-javascript-vue/blob/master/Demo-5/src/IdentifyTask-init.js )
 
 在 src\map\init.js 中引入`IdentifyTask`、 `IdentifyParameters` 两个模块
 
