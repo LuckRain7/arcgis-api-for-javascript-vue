@@ -1,63 +1,30 @@
+/* eslint-disable no-unused-vars */
 /*
  *  Description: 标绘工具
  *  Author: LuckRain7
  *  Date: 2020-05-07 17:05:55
  */
-import { loadModules } from "esri-loader";
-import config from "../config";
 
 function drawInit() {
-  loadModules(
-    [
-      "esri/toolbars/draw", // 画图
-      "esri/symbols/SimpleMarkerSymbol", // 点
-      "esri/symbols/SimpleLineSymbol", // 线
-      "esri/symbols/SimpleFillSymbol", // 面
-      "esri/graphic", // 图形模块
-      "esri/layers/GraphicsLayer", // 图形图层模块
-    ],
-    config.loadConfig
-  )
-    .then(
-      ([
-        Draw,
-        SimpleMarkerSymbol,
-        SimpleLineSymbol,
-        SimpleFillSymbol,
-        Graphic,
-        GraphicsLayer,
-      ]) => {
-        this.GraphicsLayer = GraphicsLayer;
-        this.Graphic = Graphic;
-        this.Draw = Draw;
-        this.SimpleMarkerSymbol = SimpleMarkerSymbol;
-        this.SimpleLineSymbol = SimpleLineSymbol;
-        this.SimpleFillSymbol = SimpleFillSymbol;
+  // 添加图形图层
+  this.DrawGraphics = new this.GraphicsLayer({ id: "drawLayer" });
+  // 设置图层坐标系
+  this.DrawGraphics.SpatialReference = new this.SpatialReference({
+    wkid: 4490,
+  });
+  // 将图层加载到地图上，图层设置为 7
+  this.map.addLayer(this.DrawGraphics, 7);
 
-        // 添加图形图层
-        this.DrawGraphics = new GraphicsLayer({ id: "drawLayer" });
-        // 设置图层坐标系
-        this.DrawGraphics.SpatialReference = new this.SpatialReference({
-          wkid: 4490,
-        });
-        // 将图层加载到地图上，图层设置为 7
-        this.map.addLayer(this.DrawGraphics, 7);
+  // 实例化画图
+  this.draw = new this.Draw(this.map);
 
-        // 实例化画图
-        this.draw = new Draw(this.map);
+  // 定义图形样式（自定义）(不定义则使用默认样式)
+  // this.draw.markerSymbol = new this.SimpleMarkerSymbol();
+  // this.draw.lineSymbol = new this.SimpleLineSymbol();
+  // this.draw.fillSymbol = new this.SimpleFillSymbol();
 
-        //定义图形样式（自定义）(这里使用默认样式)
-        this.draw.markerSymbol = new SimpleMarkerSymbol();
-        this.draw.lineSymbol = new SimpleLineSymbol();
-        this.draw.fillSymbol = new SimpleFillSymbol();
-
-        // 添加画图的监听事件
-        this.draw.on("draw-complete", drawEndEvent.bind(this));
-      }
-    )
-    .catch((err) => {
-      console.error(err);
-    });
+  // 添加画图的监听事件
+  this.draw.on("draw-complete", drawEndEvent.bind(this));
 }
 
 // 内置函数 画完后将图形加载到图形图层

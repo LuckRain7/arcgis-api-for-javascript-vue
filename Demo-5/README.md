@@ -13,7 +13,7 @@
 >
 > 代码地址：[https://github.com/LuckRain7/arcgis-api-for-javascript-vue/blob/master/Demo-5/src/IdentifyTask-init.js](https://github.com/LuckRain7/arcgis-api-for-javascript-vue/blob/master/Demo-5/src/IdentifyTask-init.js)
 
-在 src\map\init.js 中引入`IdentifyTask`、 `IdentifyParameters` 两个模块
+**在 src\map\init.js 中引入`IdentifyTask`、 `IdentifyParameters` 两个模块**
 
 ```diff
 loadModules(
@@ -32,7 +32,7 @@ loadModules(
     ])
 ```
 
-等待地图加载完成后添加点击事件，并初始化查询参数
+**等待地图加载完成后添加点击事件，并初始化查询参数**
 
 ```javascript
 // ! 单 on("Load",xx) 不执行(原因待查)
@@ -62,7 +62,7 @@ function mapReady() {
 }
 ```
 
-点击事件函数进行相关查询
+**点击事件函数进行相关查询**
 
 ```javascript
   function executeIdentifyTask(event) {
@@ -104,9 +104,87 @@ function mapReady() {
 
 ## 1.2  QueryTask
 
- 对 ArcGIS Server REST API 公开的地图服务的图层资源执行查询操作。 
+> 对 ArcGIS Server REST API 公开的地图服务的图层资源执行查询操作。 
+>
+> 单服务单图层多要素查询（一个地图服务查询单图层的多要素）
+>
+> 代码地址：[https://github.com/LuckRain7/arcgis-api-for-javascript-vue/blob/master/Demo-5/src/queryTask-init.js](https://github.com/LuckRain7/arcgis-api-for-javascript-vue/blob/master/Demo-5/src/queryTask-init.js)
 
+**在 src\map\init.js 中引入`query`、 `QueryTask` 两个模块**
 
+```diff
+loadModules(
+  [
++    "esri/tasks/query",
++    "esri/tasks/QueryTask",
+  ],
+  config.loadConfig
+)
+  .then(
+    ([
++      query, // Query 查询
++      QueryTask,// QueryTask 查询
+    ])
+```
 
+**等待地图加载完成后添加点击事件，并初始化查询参数**
 
+因为 QueryTask 查询点时不提供缓冲区效果查询，所以需要格外的根据绘制图形进行查询
 
+```javascript
+this.map.on("Load", mapReady);
+this.map.onLoad();
+let toolBar;
+
+function mapReady() {
+ //定义一个绘图工具
+ toolBar = new that.Draw(that.map);
+ toolBar.activate(that.Draw.CIRCLE);
+ toolBar.on("draw-complete", drawEnd);
+}
+
+function drawEnd(event) {
+ //获得绘图得到的面
+ let geometry = event.geometry;
+ //关闭绘图工具
+ toolBar.deactivate();
+
+ // 设置查询
+ let queryTask = new QueryTask(hezuosheUrl + "/0"); // 创建查询对象，需拼接查询图层id编号
+ let query = new Query(); // 创建查询参数对象
+ query.geometry = geometry; // 空间查询的几何对象
+ query.outFields = ["*"]; // 服务器返回字段 *:all
+ query.outSpatialReference = thatMap.spatialReference; // 空间参考信息
+ query.spatialRelationship = Query.SPATIAL_REL_INTERSECTS; // 设置查询的标准
+ query.returnGeometry = true; // 是否返回几何信息
+
+ //执行空间查询
+ const deferred = queryTask
+   .execute(query)
+   .addCallback(function(result) {
+     const { features } = result;
+     if (features.length < 1) return;
+     console.log(features);
+
+     return features.map((item, index) => {
+       // 设置信息弹窗模板内容
+       let info = new InfoTemplate("Attributes" + index, "${*}");
+       item.setInfoTemplate(info);
+       return item;
+     });
+   });
+ console.log(deferred);
+
+ // 设置弹窗显示
+ thatMap.infoWindow.setFeatures([deferred]);
+ thatMap.infoWindow.show(event.mapPoint);
+}
+```
+
+效果：（💛动图较大，请耐心等待）
+
+![](https://luckrain7.github.io/arcgis-api-for-javascript-vue/Demo-5/QueryTask.gif)
+
+<div style="float:right;">
+<a href="https://github.com/LuckRain7/arcgis-api-for-javascript-vue">🚀返回首页</a>
+</div>

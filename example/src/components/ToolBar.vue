@@ -68,6 +68,28 @@
       </a-dropdown>
       <!-- 标绘 END-->
 
+      <!-- 空间查询 GO-->
+      <a-dropdown>
+        <a-menu slot="overlay">
+          <a-menu-item key="1" @click="spatialQuery('POINT')">
+            点查询
+          </a-menu-item>
+          <a-menu-item key="2" @click="spatialQuery('RECTANGLE')">
+            面查询
+          </a-menu-item>
+          <a-menu-item key="3" @click="spatialQuery('CIRCLE')">
+            圆形查询
+          </a-menu-item>
+          <a-menu-item key="4" @click="spatialQuery('POLYGON')">
+            多边形查询
+          </a-menu-item>
+        </a-menu>
+        <a-button type="primary">
+          <a-icon type="file-search" />空间查询 <a-icon type="down" />
+        </a-button>
+      </a-dropdown>
+      <!-- 空间查询 END-->
+
       <a-button type="primary" @click="showLegend">
         <a-icon type="unordered-list" />图例
       </a-button>
@@ -102,6 +124,10 @@ export default {
     // 显示图层
     showLayerList() {
       this.$emit("showLayerList");
+    },
+    // 空间查询
+    spatialQuery(type) {
+      this.$emit("spatialQuery", type);
     },
   },
 };

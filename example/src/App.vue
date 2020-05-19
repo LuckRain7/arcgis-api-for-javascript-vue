@@ -20,6 +20,7 @@
       @draw="draw"
       @showLegend="showLegend"
       @showLayerList="showLayerList"
+      @spatialQuery="spatialQuery"
     ></tool-bar>
 
     <!-- 测量组件 -->
@@ -74,6 +75,9 @@ export default {
     // 显示图层
     showLayerList() {
       console.log("开启图层");
+    },
+    spatialQuery(type) {
+      console.log(type);
     },
   },
   data() {
