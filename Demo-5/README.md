@@ -4,10 +4,10 @@
 
 **信息查询分为两个类**
 
-- 空间查询：点击地图查询对应区域的要素信息。（ [QueryTask](#12--querytask)，[IdentifyTask](#11--identifytask)  ）
+- 空间查询：点击地图查询对应区域的要素信息。（ [QueryTask](#2--querytask)，[IdentifyTask](#1--identifytask)  ）
 - 属性查询：通过对某个属性进行模糊匹配，在地图显示对应元素。（ `FindTask `）
 
-## 1.1  IdentifyTask
+## 1  IdentifyTask
 
 > 单服务多图层多要素查询（一个地图服务里边可查询多个图层多个要素）
 >
@@ -102,7 +102,7 @@ function mapReady() {
 
 ![](https://luckrain7.github.io/arcgis-api-for-javascript-vue/Demo-5/IdentifyTask.gif)
 
-## 1.2  QueryTask
+## 2  QueryTask
 
 > 对 ArcGIS Server REST API 公开的地图服务的图层资源执行查询操作。 
 >
@@ -185,6 +185,5 @@ function drawEnd(event) {
 
 ![](https://luckrain7.github.io/arcgis-api-for-javascript-vue/Demo-5/QueryTask.gif)
 
-<div style="float:right;">
-<a href="https://github.com/LuckRain7/arcgis-api-for-javascript-vue">🚀返回首页</a>
-</div>
+[🚀返回首页](https://github.com/LuckRain7/arcgis-api-for-javascript-vue)
+
