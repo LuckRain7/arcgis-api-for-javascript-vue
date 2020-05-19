@@ -1,4 +1,4 @@
-# vue + ArcGIS 地图应用系列四：加载 ArcGIS Server 地图服务
+# 🌍vue + ArcGIS 地图应用系列四：加载 ArcGIS Server 地图服务
 
 ## 1.  ArcGIS Server 服务器
 
@@ -40,6 +40,10 @@ const bianjieMapServer = new this.ArcGISDynamicMapServiceLayer(
 // 通过 map.addLayer 函数 加载到地图上
 this.map.addLayer(bianjieMapServer, 3);
 ```
+
+效果：
+
+![](https://luckrain7.github.io/arcgis-api-for-javascript-vue/Demo-4/map-server-1.png)
 
 ### 2.1  复杂服务引入
 
