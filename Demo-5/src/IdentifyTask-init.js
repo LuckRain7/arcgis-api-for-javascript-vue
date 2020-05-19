@@ -152,6 +152,7 @@ ArcGIS.prototype.init = function init($el) {
         this.map.addLayer(hezuosheMapServer, 4);
 
         // 针对合作社图层进行查询
+
         let hezuosheMSIT;
         let hezuosheMSIP;
 
