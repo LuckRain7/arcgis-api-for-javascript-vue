@@ -4,7 +4,7 @@
 
 **信息查询分为两个类**
 
-- 空间查询：点击地图查询对应区域的要素信息。（ `QueryTask`,`IdentifyTask`  ）
+- 空间查询：点击地图查询对应区域的要素信息。（ [QueryTask](#12--querytask)，[IdentifyTask](#11--identifytask)  ）
 - 属性查询：通过对某个属性进行模糊匹配，在地图显示对应元素。（ `FindTask `）
 
 ## 1.1  IdentifyTask
@@ -104,7 +104,7 @@ function mapReady() {
 
 ## 1.2  QueryTask
 
-TODO
+ 对 ArcGIS Server REST API 公开的地图服务的图层资源执行查询操作。 
 
 
 

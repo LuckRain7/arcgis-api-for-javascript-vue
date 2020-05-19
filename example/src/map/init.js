@@ -72,8 +72,6 @@ ArcGIS.prototype.init = function init($el) {
       ]) => {
         this.SpatialReference = SpatialReference;
         this.ArcGISDynamicMapServiceLayer = ArcGISDynamicMapServiceLayer;
-        this.IdentifyTask = IdentifyTask;
-        this.IdentifyParameters = IdentifyParameters;
 
         this.baseMap = {
           vectorMap: new SDTDTLayer(), //矢量
@@ -151,10 +149,6 @@ ArcGIS.prototype.init = function init($el) {
         );
         this.map.addLayer(hezuosheMapServer, 4);
 
-        // 针对合作社图层进行查询
-        let hezuosheMSIT;
-        let hezuosheMSIP;
-
         // 防止 ArcGIS API 内部 call apply 等继承出现问题
         // 我们需要 function 定义函数
         let thatMap = this.map;
@@ -164,57 +158,12 @@ ArcGIS.prototype.init = function init($el) {
         this.map.onLoad();
 
         function mapReady() {
-          console.log("--- 地图加载完毕 ---");
-          // 添加地图点击事件
-          thatMap.on("click", executeIdentifyTask);
-
-          // 创建 identify tasks 实例 并设置参数
-          hezuosheMSIT = new IdentifyTask(serverUrl().huinong.hezuoshe);
-
-          // 初始化 IdentifyParameters
-          hezuosheMSIP = new IdentifyParameters();
-          // 设定 xx 像素范围内查询
-          hezuosheMSIP.tolerance = 3;
-          // true 结果集包括与每个结果关联的几何。
-          hezuosheMSIP.returnGeometry = true;
-          // 查询图层（可以控制此参数，实现图层之间的单独查询）
-          hezuosheMSIP.layerIds = [0, 1, 2];
-          // 指定使用“标识”时要使用的图层。
-          hezuosheMSIP.layerOption = IdentifyParameters.LAYER_OPTION_ALL;
-          hezuosheMSIP.width = thatMap.width;
-          hezuosheMSIP.height = thatMap.height;
+          thatMap.on("Click", mapClick);
         }
 
-        function executeIdentifyTask(event) {
-          //识别期间用于选择要素的几何。通过改变此选项进行区域选择、点选
-          hezuosheMSIP.geometry = event.mapPoint;
-          hezuosheMSIP.mapExtent = thatMap.extent;
-
-          var deferred = hezuosheMSIT
-            .execute(hezuosheMSIP) // 将参数传入
-            .addCallback(function(response) {
-              // response 为数组
-              if (response.length < 1) return;
-
-              return response.map((item, index) => {
-                console.log("图层名称：", item.layerName);
-                console.log(`${item.displayFieldName}::${item.value}`);
-
-                // 要素特征
-                let { feature } = item;
-                console.log("要素属性表::", feature.attributes);
-                console.log("要素图形::", feature.geometry);
-                feature.attributes.layerName = item.layerName;
-                // 设置信息弹窗模板内容
-                var info = new InfoTemplate("Attributes", "${*}");
-                feature.setInfoTemplate(info);
-                return feature;
-              });
-            });
-
-          // 设置弹窗显示
-          thatMap.infoWindow.setFeatures([deferred]);
-          thatMap.infoWindow.show(event.mapPoint);
+        function mapClick(ev) {
+          console.log("click");
+          console.log(ev);
         }
 
         // console.log(this.map);
