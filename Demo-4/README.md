@@ -4,9 +4,9 @@
 
 登录自己搭建好的 ArcGIS Server 服务器，找到对应服务的 REST URL 。
 
- ![](./arcgis-server-1.png)
+ ![](https://luckrain7.github.io/arcgis-api-for-javascript-vue/Demo-4/arcgis-server-1.png)
 
- ![](./arcgis-server-2.png)
+ ![](https://luckrain7.github.io/arcgis-api-for-javascript-vue/Demo-4/arcgis-server-2.png)
 
 
 
@@ -43,5 +43,8 @@ this.map.addLayer(bianjieMapServer, 3);
 
 ### 2.1  复杂服务引入
 
-创建图层列表组件
+基于图层列表的服务引入（涉及单服务、多图层），暂且搁置
 
+
+
+### [🚀返回首页]( https://github.com/LuckRain7/arcgis-api-for-javascript-vue )
