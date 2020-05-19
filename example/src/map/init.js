@@ -193,13 +193,13 @@ ArcGIS.prototype.init = function init($el) {
 
         function drawEnd(event) {
           //获得绘图得到的面
-          var geometry = event.geometry;
+          let geometry = event.geometry;
           //关闭绘图工具
           toolBar.deactivate();
 
           // 设置查询
-          var queryTask = new QueryTask(hezuosheUrl + "/0"); // 创建查询对象，需拼接查询图层id编号
-          var query = new Query(); // 创建查询参数对象
+          let queryTask = new QueryTask(hezuosheUrl + "/0"); // 创建查询对象，需拼接查询图层id编号
+          let query = new Query(); // 创建查询参数对象
           query.geometry = geometry; // 空间查询的几何对象
           query.outFields = ["*"]; // 服务器返回字段 *:all
           query.outSpatialReference = thatMap.spatialReference; // 空间参考信息
