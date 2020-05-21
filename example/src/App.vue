@@ -21,6 +21,7 @@
       @showLegend="showLegend"
       @showLayerList="showLayerList"
       @spatialQuery="spatialQuery"
+      @attributeQuery="attributeQuery"
     ></tool-bar>
 
     <!-- 测量组件 -->
@@ -30,6 +31,12 @@
     ></measurement>
 
     <layer-nav-menu></layer-nav-menu>
+
+    <!-- 属性查询框 -->
+    <Query
+      @attributeQueryOnSearch="attributeQueryOnSearch"
+      :queryTaskData="queryTaskData"
+    ></Query>
   </div>
 </template>
 
@@ -38,6 +45,8 @@ import MyHeader from "./components/Header.vue";
 import ToolBar from "./components/ToolBar.vue";
 import Measurement from "./components/Measurement.vue";
 import LayerNavMenu from "./components/LayerNavMenu.vue";
+import Query from "./components/Query.vue";
+import url from "../server.url.config.js";
 
 // 引入 ArcGIS 模块，并进行实例化
 import ArcGIS from "./map/index.js";
@@ -79,10 +88,29 @@ export default {
     spatialQuery(type) {
       console.log(type);
     },
+    attributeQuery() {
+      console.log("开启属性查询");
+    },
+    attributeQueryOnSearch(searchText) {
+      console.log("查询内容::::", searchText);
+      // 查询并接回调函数
+      Map.executeQueryTask(
+        {
+          url: url().huinong.hezuoshe,
+          layerIds: [0, 1, 2],
+          searchText: searchText,
+        },
+        (res) => {
+          console.log(res);
+          this.queryTaskData = res;
+        }
+      );
+    },
   },
   data() {
     return {
       isShowMeasurement: false, // 测量窗口
+      queryTaskData: null, // 属性查询
     };
   },
   components: {
@@ -90,6 +118,7 @@ export default {
     ToolBar,
     Measurement,
     LayerNavMenu,
+    Query,
   },
 };
 </script>

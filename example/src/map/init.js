@@ -25,6 +25,9 @@ function ArcGIS() {
   this.SimpleLineSymbol = null;
   this.SimpleFillSymbol = null;
   this.ArcGISDynamicMapServiceLayer = null;
+  // 属性查询
+  this.FindTask = null;
+  this.FindParameters = null;
 }
 
 ArcGIS.prototype.init = function init($el) {
@@ -55,6 +58,8 @@ ArcGIS.prototype.init = function init($el) {
       "esri/symbols/SimpleFillSymbol", // 面
       "esri/graphic", // 图形模块
       "esri/layers/GraphicsLayer", // 图形图层模块
+      "esri/tasks/FindTask",
+      "esri/tasks/FindParameters",
       // -----------------------
       // "dojo/dom-construct",
       // "dojo/domReady!",
@@ -85,6 +90,8 @@ ArcGIS.prototype.init = function init($el) {
         SimpleFillSymbol, // 面
         Graphic, // 图形模块
         GraphicsLayer, // 图形图层模块
+        FindTask, // FindTask 属性查询
+        FindParameters, // FindTask 属性查询参数
       ]) => {
         this.SpatialReference = SpatialReference;
         this.ArcGISDynamicMapServiceLayer = ArcGISDynamicMapServiceLayer;
@@ -94,6 +101,9 @@ ArcGIS.prototype.init = function init($el) {
         this.SimpleMarkerSymbol = SimpleMarkerSymbol;
         this.SimpleLineSymbol = SimpleLineSymbol;
         this.SimpleFillSymbol = SimpleFillSymbol;
+        // 属性查询
+        this.FindTask = FindTask;
+        this.FindParameters = FindParameters;
 
         this.baseMap = {
           vectorMap: new SDTDTLayer(), //矢量
@@ -145,9 +155,9 @@ ArcGIS.prototype.init = function init($el) {
         // 初始化标绘工具
         this.drawInit();
 
-        // ---------------------------------
-        // ---------添加地图边界-------------
-        // ---------------------------------
+        // --------------- //
+        // - 添加地图边界 - //
+        // --------------- //
         // 1.通过 ArcGISDynamicMapServiceLayer 类进行导入
         const bianjieMapServer = new this.ArcGISDynamicMapServiceLayer(
           serverUrl().bianjie,
@@ -159,9 +169,9 @@ ArcGIS.prototype.init = function init($el) {
 
         this.map.addLayer(bianjieMapServer, 3); // 2.通过 map.addLayer 函数 加载到地图上
 
-        // |---------------|
-        // |-添加合作社图层-|
-        // |---------------|
+        // ----------------- //
+        // - 添加合作社图层 - //
+        // ----------------- //
         const hezuosheUrl = serverUrl().huinong.hezuoshe;
         const hezuosheMapServer = new this.ArcGISDynamicMapServiceLayer(
           hezuosheUrl,
@@ -172,18 +182,20 @@ ArcGIS.prototype.init = function init($el) {
         );
         this.map.addLayer(hezuosheMapServer, 4);
 
-        // thatMap.on("Click", mapClick);
-
         // 防止 ArcGIS API 内部 call apply 等继承出现问题
         // 我们需要 function 定义函数
-        let thatMap = this.map;
         let that = this;
 
         // ! 单 on("Load",xx) 不执行(原因待查)
         this.map.on("Load", mapReady);
         this.map.onLoad();
+        // thatMap.on("Click", mapClick);
 
-        function mapReady() {}
+        function mapReady() {
+          console.log(1);
+        }
+
+        function find() {}
       }
     ) //end
     .catch((err) => {

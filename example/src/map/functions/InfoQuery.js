@@ -6,8 +6,6 @@
  * 空间查询
  * 属性查询
  */
-const a = 10;
-const b = 10;
 
 /* example  IdentifyTask 查询封装
 
@@ -144,11 +142,29 @@ function executeQueryTask(
       return item;
     });
   });
-  console.log(deferred);
+  // console.log(deferred);
 
   // 设置弹窗显示
   thatMap.infoWindow.setFeatures([deferred]);
   thatMap.infoWindow.show(event.mapPoint);
 }
 
-export { a, b, executeIdentifyTask, executeQueryTask };
+function executeQueryTask() {
+  let findTask = new that.FindTask(hezuosheUrl); //创建属性查询对象
+
+  let findParams = new that.FindParameters(); //创建属性查询参数
+  findParams.returnGeometry = true; // true 返回几何信息
+  findParams.layerIds = [0, 1, 2]; // 查询图层id
+  findParams.searchFields = ["name"]; // 查询字段
+  findParams.searchText = "J4"; // 查询内容 name='J4'
+
+  //执行查询对象
+  const deferred = findTask.execute(findParams).addCallback(function(result) {
+    console.log(result);
+  });
+
+  // // 设置弹窗显示
+  // thatMap.infoWindow.setFeatures([deferred]);
+  // thatMap.infoWindow.show(event.mapPoint);
+}
+export { executeIdentifyTask, executeQueryTask };

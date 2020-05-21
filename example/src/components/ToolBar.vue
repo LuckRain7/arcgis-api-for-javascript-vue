@@ -90,6 +90,10 @@
       </a-dropdown>
       <!-- 空间查询 END-->
 
+      <a-button type="primary" @click="attributeQuery">
+        <a-icon type="file-search" />属性查询
+      </a-button>
+
       <a-button type="primary" @click="showLegend">
         <a-icon type="unordered-list" />图例
       </a-button>
@@ -128,6 +132,10 @@ export default {
     // 空间查询
     spatialQuery(type) {
       this.$emit("spatialQuery", type);
+    },
+    // 属性查询
+    attributeQuery() {
+      this.$emit("spatialQuery");
     },
   },
 };
