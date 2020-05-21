@@ -4,10 +4,10 @@ Demo-5 中我们实现了空间查询，这里我们进行属性查询代码编�
 
 **信息查询分为两个类**
 
-- 空间查询：点击地图查询对应区域的要素信息。（ QueryTask，IdentifyTask  ）
-- 属性查询：通过对某个属性进行模糊匹配，在地图显示对应元素。（ FindTask ）
+- 空间查询：点击地图查询对应区域的要素信息。（ QueryTask，IdentifyTask ）
+- 属性查询：通过对某个属性进行模糊匹配，在地图显示对应元素。（ [FindTask](#1---findtask)、[QueryTask](#2---querytask) ）
 
-## 1.   FindTask 
+## 1. FindTask
 
 首先创建一个属性查询组件(src\components\Query.vue)，用于接收查询的变量及展示查询结果。
 
@@ -63,7 +63,7 @@ export default {
   props: {
     queryTaskData: {
       type: Array,
-      default: function() {
+      default: function () {
         return [];
       },
     },
@@ -72,7 +72,7 @@ export default {
 </script>
 ```
 
-**在 src\map\init.js 中引入`FindTask `、 `FindParameters` 两个模块**
+**在 src\map\init.js 中引入`FindTask`、 `FindParameters` 两个模块**
 
 ```diff
 loadModules(
@@ -120,7 +120,7 @@ function executeQueryTask(options, callback) {
   findParams.searchText = searchText; // 查询内容 artel = searchText
 
   // 执行查询对象
-  findTask.execute(findParams).addCallback(function(result) {
+  findTask.execute(findParams).addCallback(function (result) {
     console.log("result::::", result);
     if (result.length < 1) return [];
     const feats = result.map((item) => {
@@ -141,52 +141,51 @@ export { name, executeQueryTask };
 + ArcGIS.prototype.executeQueryTask = executeQueryTask; // 属性查询
 ```
 
-在页面( src\App.vue )中引入组件并执行对应的查询函数 
+在页面( src\App.vue )中引入组件并执行对应的查询函数
 
-> ps :  以下代码为核心添加代码。
+> ps : 以下代码为核心添加代码。
 
 ```vue
 <template>
   <!-- 属性查询框 -->
-    <Query
-      @attributeQueryOnSearch="attributeQueryOnSearch"
-      :queryTaskData="queryTaskData"
-    ></Query>
+  <Query
+    @attributeQueryOnSearch="attributeQueryOnSearch"
+    :queryTaskData="queryTaskData"
+  ></Query>
 </template>
 <script>
-  // 导入
- import Query from "./components/Query.vue";
- import url from "../server.url.config.js";
-  
-  methods:{
-      attributeQueryOnSearch(searchText) {
-        console.log("查询内容::::", searchText);
-        // 查询并接回调函数
-        Map.executeQueryTask(
-          {
-            url: url().huinong.hezuoshe,
-            layerIds: [0, 1, 2],
-            searchText: searchText,
-          },
-          (res) => {
-            console.log(res);
-            this.queryTaskData = res;
-          }
-        );
-      },
-  },
+ // 导入
+import Query from "./components/Query.vue";
+import url from "../server.url.config.js";
+
+ methods:{
+     attributeQueryOnSearch(searchText) {
+       console.log("查询内容::::", searchText);
+       // 查询并接回调函数
+       Map.executeQueryTask(
+         {
+           url: url().huinong.hezuoshe,
+           layerIds: [0, 1, 2],
+           searchText: searchText,
+         },
+         (res) => {
+           console.log(res);
+           this.queryTaskData = res;
+         }
+       );
+     },
+ },
 </script>
 ```
 
-效果：（💛动图较大，请耐心等待）
+效果：（💛 动图较大，请耐心等待）
 
 ![](https://luckrain7.github.io/arcgis-api-for-javascript-vue/Demo-6/FindTask.gif)
 
-## QueryTask
+## 2.  QueryTask
 
 ！TODO
 
 <br>
 
-[🚀返回首页](https://github.com/LuckRain7/arcgis-api-for-javascript-vue)
-
+[🚀 返回首页](https://github.com/LuckRain7/arcgis-api-for-javascript-vue)
