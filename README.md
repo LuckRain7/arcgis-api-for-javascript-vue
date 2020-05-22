@@ -16,7 +16,7 @@ PS: 代码在边写过程中，不断的改进，可能 example 中的代码与�
 
 [（5）实现 ArcGIS Server 地图服务信息查询 - 空间查询](https://github.com/LuckRain7/arcgis-api-for-javascript-vue/tree/master/Demo-5)
 
-[（6）实现 ArcGIS Server 地图服务信息查询 - 属性查询（dev）](https://github.com/LuckRain7/arcgis-api-for-javascript-vue/tree/master/Demo-6)
+[（6）实现 ArcGIS Server 地图服务信息查询 - 属性查询](https://github.com/LuckRain7/arcgis-api-for-javascript-vue/tree/master/Demo-6)
 
 （7）热力图分析
 

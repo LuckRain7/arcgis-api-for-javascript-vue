@@ -6,6 +6,8 @@ Demo-5 中我们实现了空间查询，这里我们进行属性查询代码编�
 
 - 空间查询：点击地图查询对应区域的要素信息。（ QueryTask，IdentifyTask ）
 - 属性查询：通过对某个属性进行模糊匹配，在地图显示对应元素。（ [FindTask](#1---findtask)、[QueryTask](#2---querytask) ）
+  - FindTask ：多用于多字段的模糊匹配
+  - QueryTask : 多用于数值的区间查询、字段的精准匹配。
 
 ## 1. FindTask
 
@@ -99,14 +101,14 @@ loadModules(
 const name = "查询模块";
 
 /*
- *  description: QueryTask 属性查询
+ *  description: FindTask 属性查询
  *  param {String}    url          查询服务地址
  *  param {Array}     layerIds     查询图层is
  *  param {String}    searchText   查询内容
  *  param {Function}  callback     回调函数
  *  return:  callback(feats)
  */
-function executeQueryTask(options, callback) {
+function executeFindTask(options, callback) {
   const { url, layerIds, searchText } = options;
   console.log(options);
 
@@ -130,15 +132,15 @@ function executeQueryTask(options, callback) {
     callback(feats);
   });
 }
-export { name, executeQueryTask };
+export { name, executeFindTask };
 ```
 
 在模块化中导入 src\map\index.js
 
 ```diff
-+ import { executeQueryTask } from "./modules/Query.js";
++ import { executeFindTask } from "./modules/Query.js";
 
-+ ArcGIS.prototype.executeQueryTask = executeQueryTask; // 属性查询
++ ArcGIS.prototype.executeFindTask = executeFindTask; // 属性查询
 ```
 
 在页面( src\App.vue )中引入组件并执行对应的查询函数
@@ -162,7 +164,7 @@ import url from "../server.url.config.js";
      attributeQueryOnSearch(searchText) {
        console.log("查询内容::::", searchText);
        // 查询并接回调函数
-       Map.executeQueryTask(
+       Map.executeFindTask(
          {
            url: url().huinong.hezuoshe,
            layerIds: [0, 1, 2],
@@ -184,7 +186,110 @@ import url from "../server.url.config.js";
 
 ## 2.  QueryTask
 
-！TODO
+在 src\map\init.js 中引入`query`、 `QueryTask` 两个模块**
+
+```diff
+loadModules(
+  [
++    "esri/tasks/query",
++    "esri/tasks/QueryTask",
+  ],
+  config.loadConfig
+)
+  .then(
+    ([
++      Query, // Query 查询
++      QueryTask,// QueryTask 查询
+    ])=> {
+    // Query 综合查询
++    this.Query = Query;
++    this.QueryTask = QueryTask;
+    }
+```
+
+**创建 src\map\modules\Query.js 查询模块，封装查询函数。**
+
+```javascript
+/*
+ *  description: 基于 QueryTask 的属性查询
+ *  param {String}    url          查询服务地址
+ *  param {Array}     layerId      查询图层id
+ *  param {String}    searchText   查询内容
+ *  param {Function}  callback     回调函数
+ *  return:  callback(feats)
+ */
+function executeQueryTaskByAttribute(options, callback) {
+  const { url, layerId, searchText } = options;
+
+  // 初始化查询实例和参数
+  let queryTask = new this.QueryTask(url + "/" + layerId);
+  let query = new this.Query();
+
+  query.where = `artel = '${searchText}'`; // 类 sql 的查询语句
+  query.outFields = ["*"]; // 返回的字段信息 *:返回全部字段
+  query.returnGeometry = true; // 返回几何形状
+  console.log(111111);
+
+  //执行属性查询
+  queryTask.execute(query).addCallback(function(result) {
+    const { features } = result;
+    if (features.length < 1) return;
+
+    const feats = features.map((item) => {
+      return item.feature.attributes;
+    });
+
+    callback(feats);
+  });
+}
+
+export {  executeFindTask, executeQueryTaskByAttribute };
+```
+
+在模块化中导入 src\map\index.js
+
+```diff
++ import { executeQueryTaskByAttribute } from "./modules/Query.js";
+
++ ArcGIS.prototype.executeQueryTaskByAttribute = executeQueryTaskByAttribute; // 属性
+```
+
+在页面( src\App.vue )中引入组件并执行对应的查询函数
+
+```javascript
+<template>
+  <!-- 属性查询框 -->
+  <Query
+    @attributeQueryOnSearch="attributeQueryOnSearch"
+    :queryTaskData="queryTaskData"
+  ></Query>
+</template>
+<script>
+ // 导入
+import Query from "./components/Query.vue";
+import url from "../server.url.config.js";
+
+ methods:{
+     attributeQueryOnSearch(searchText) {
+       console.log("查询内容::::", searchText);
+       // 查询并接回调函数
+        Map.executeQueryTaskByAttribute(
+          {
+            url: url().huinong.hezuoshe,
+            layerId: "0",
+            searchText: searchText,
+          },
+          (res) => {
+            console.log(res);
+            this.attributeQueryData = res;
+          }
+        );
+     },
+ },
+</script>
+```
+
+
 
 <br>
 
