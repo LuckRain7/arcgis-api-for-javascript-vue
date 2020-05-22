@@ -185,4 +185,6 @@ function drawEnd(event) {
 
 ![](https://luckrain7.github.io/arcgis-api-for-javascript-vue/Demo-5/QueryTask.gif)
 
+<br>
+
 [🚀返回首页](https://github.com/LuckRain7/arcgis-api-for-javascript-vue)
