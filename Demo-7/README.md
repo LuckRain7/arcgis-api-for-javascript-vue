@@ -2,6 +2,8 @@
 
 ## 1.  根据图层进行热力图渲染
 
+> 代码地址:[ https://github.com/LuckRain7/arcgis-api-for-javascript-vue/blob/master/Demo-7/init.js ]( https://github.com/LuckRain7/arcgis-api-for-javascript-vue/blob/master/Demo-7/init.js )
+
 **在 src\map\init.js 引入一下模块**
 
 ```diff
