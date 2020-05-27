@@ -5,7 +5,7 @@
 -->
 
 <template>
-  <div class="a-query">
+  <div class="a-query" style="display:none">
     <div class="title">
       <span>属性查询</span>
       <a-icon type="close" class="title-icon" />
