@@ -2226,9 +2226,9 @@
 
 **GeometryService**
 
->说明：
+>说明：表示由ArcGIS服务器REST API公开的几何图形服务资源。它用于对几何图形执行各种操作，如项目、简化、缓冲区和关系。 建议您创建一个几何体服务，以便在应用程序中使用。有关详细信息，请参阅服务器资源中心的几何图形服务帮助主题。Esri在https://utility.arcgisonline.com/ArcGIS/rest/services/Geometry/GeometryServer上托管一个几何图形服务。 
 >
->引入：
+>引入：`"esri/tasks/GeometryService"`
 >
 > 网址：https://developers.arcgis.com/javascript/3/jsapi/geometryservice-amd.html
 

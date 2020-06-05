@@ -65,6 +65,11 @@ ArcGIS.prototype.init = function init($el) {
       "esri/tasks/FindTask",
       "esri/tasks/FindParameters",
       "esri/renderers/HeatmapRenderer",
+      "esri/config", // 所有JS API配置选项的默认值。
+      "esri/tasks/GeometryService",
+      "esri/Color",
+      "esri/tasks/BufferParameters", 
+      "esri/geometry/normalizeUtils",
       "dojo/on", // dojo 事件监听
       // -----------------------
       // "dojo/dom-construct",
@@ -100,6 +105,11 @@ ArcGIS.prototype.init = function init($el) {
         FindTask, // FindTask 属性查询
         FindParameters, // FindTask 属性查询参数
         HeatmapRenderer, // 热力图渲染
+        EsriConfig, // 所有JS API配置选项的默认值。
+        GeometryService, // 表示由ArcGIS服务器REST API公开的几何图形服务资源。它用于对几何图形执行各种操作，如项目、简化、缓冲区和关系。
+        EsriColor, // 设置颜色
+        BufferParameters, // 缓冲区参数配置模块
+        NormalizeUtils,
         dojoOn, // dojo 事件监听
       ]) => {
         this.SpatialReference = SpatialReference;
@@ -119,6 +129,9 @@ ArcGIS.prototype.init = function init($el) {
         this.QueryTask = QueryTask;
         // 热力图渲染
         this.HeatmapRenderer = HeatmapRenderer;
+        // 所有JS API配置选项的默认值。
+        this.EsriConfig = EsriConfig;
+        this.GeometryService = GeometryService;
         // dojo
         this.dojoOn = dojoOn;
 
@@ -195,31 +208,135 @@ ArcGIS.prototype.init = function init($el) {
         this.map.onLoad();
         // thatMap.on("Click", mapClick);
 
-        function mapReady() {
-          console.log(1);
-
-          let doctorNumFlayer = new FeatureLayer(
-            serverUrl().fenxi.xiangcunyisheng + "/0",
-            {
-              outFields: ["*"], //必须要有返回值，提供给热力图进行分析
-            }
-          );
-
-          let heatmapRenderer = new HeatmapRenderer({
-            field: "yiliao", // 根据哪一个字段进行渲染
-            blurRadius: 12, //蓝色
-            colors: [
-              "rgba(30,144,255, 0)",
-              "rgba(30,144,255,0.8)",
-              "rgb(0, 255, 0)",
-              "rgb(255, 255, 0)",
-              "rgb(255, 0, 0)",
-            ],
-          });
-          doctorNumFlayer.setRenderer(heatmapRenderer);
-
-          that.map.addLayer(doctorNumFlayer); // 将热力图分析添加到地图上
+        let toolBar;
+        // 得使用 ；function 定义函数
+        function dddddd(evtObj) {
+          console.log(evtObj);
         }
+
+        function mapReady() {
+          console.log("地图加载完成");
+
+          // 配置缓冲区参数
+          EsriConfig.defaults.geometryService = new GeometryService(
+            serverUrl().Utilities.Geometry
+          );
+          EsriConfig.defaults.io.proxyUrl = "/proxy/";
+          EsriConfig.defaults.io.alwaysUseProxy = false;
+
+          // 定义一个绘图工具
+          toolBar = new Draw(that.map);
+          toolBar.activate(Draw.CIRCLE);
+          toolBar.on("draw-complete", nongyecompany);
+        }
+
+        function nongyecompany(evtObj) {
+          //对弹窗进行判断
+          var geometry = evtObj.geometry;
+          var symbol;
+          // symbol;
+          switch (geometry.type) {
+            case "point":
+              symbol = new SimpleMarkerSymbol(
+                SimpleMarkerSymbol.STYLE_SQUARE,
+                10,
+                new SimpleLineSymbol(
+                  SimpleLineSymbol.STYLE_SOLID,
+                  new EsriColor([255, 0, 0]),
+                  1
+                ),
+                new EsriColor([0, 255, 0, 0.25])
+              );
+              break;
+            case "polyline":
+              symbol = new SimpleLineSymbol(
+                SimpleLineSymbol.STYLE_DASH,
+                new EsriColor([255, 0, 0]),
+                1
+              );
+              break;
+            case "polygon":
+              symbol = new SimpleFillSymbol(
+                SimpleFillSymbol.STYLE_NONE,
+                new SimpleLineSymbol(
+                  SimpleLineSymbol.STYLE_DASHDOT,
+                  new EsriColor([255, 0, 0]),
+                  2
+                ),
+                new EsriColor([255, 255, 0, 0.25])
+              );
+              break;
+          }
+          var graphic = new Graphic(geometry, symbol);
+          that.map.graphics.add(graphic);
+
+          var params = new BufferParameters();
+          params.distances = ["10"];
+          params.bufferSpatialReference = new SpatialReference({
+            wkid: 102100,
+          });
+          params.outSpatialReference = that.map.spatialReference;
+          params.unit = GeometryService["UNIT_KILOMETER"];
+          NormalizeUtils.normalizeCentralMeridian([geometry]).then(function(
+            normalizedGeometries
+          ) {
+            var normalizedGeometry = normalizedGeometries[0];
+            if (normalizedGeometry.type === "polygon") {
+              EsriConfig.defaults.geometryService.simplify(
+                [normalizedGeometry],
+                function(geometries) {
+                  params.geometries = geometries;
+                  EsriConfig.defaults.geometryService.buffer(
+                    params,
+                    showBuffer1
+                  );
+                }
+              );
+            } else {
+              params.geometries = [normalizedGeometry];
+              EsriConfig.defaults.geometryService.buffer(params, showBuffer1);
+            }
+          });
+        }
+
+        let showBuffer1 = (bufferedGeometries) => {
+          // var symbol = new SimpleFillSymbol(
+          //   SimpleFillSymbol.STYLE_SOLID,
+          //   new SimpleLineSymbol(
+          //     SimpleLineSymbol.STYLE_SOLID,
+          //     new EsriColor([255, 0, 0, 0.65]),
+          //     2
+          //   ),
+          //   new EsriColor([255, 0, 0, 0.35])
+          // );
+
+          console.log();
+          const geometries = bufferedGeometries[0].rings[0];
+          console.log(geometries);
+          console.log(that.map);
+
+          geometries.forEach(function(geometry) {
+            console.log(geometry);
+
+            let graphicBuffer = geometry;
+            var BufferTask = QueryTask(
+              serverUrl().huinong.zhongzhiBuffer + "/0"
+            );
+            var Bufferquery = new Query();
+            Bufferquery.returnGeometry = true;
+            // var sr1 = new SpatialReference(4490);
+            graphicBuffer.spatialReference = new SpatialReference(4490);
+            Bufferquery.geometry = graphicBuffer;
+            // Bufferquery.geometry = graphicBuffer.setSpatialReference(sr1);
+            Bufferquery.outFields = ["*"];
+            BufferTask.execute(Bufferquery, showResults);
+          });
+
+          function showResults(featureSet) {
+            that.map.graphics.clear();
+            console.log(featureSet);
+          }
+        };
       }
     ) //end
     .catch((err) => {
