@@ -68,7 +68,7 @@ ArcGIS.prototype.init = function init($el) {
       "esri/config", // 所有JS API配置选项的默认值。
       "esri/tasks/GeometryService",
       "esri/Color",
-      "esri/tasks/BufferParameters", 
+      "esri/tasks/BufferParameters",
       "esri/geometry/normalizeUtils",
       "dojo/on", // dojo 事件监听
       // -----------------------
@@ -109,7 +109,7 @@ ArcGIS.prototype.init = function init($el) {
         GeometryService, // 表示由ArcGIS服务器REST API公开的几何图形服务资源。它用于对几何图形执行各种操作，如项目、简化、缓冲区和关系。
         EsriColor, // 设置颜色
         BufferParameters, // 缓冲区参数配置模块
-        NormalizeUtils,
+        NormalizeUtils, // 将与中央子午线相交或落在世界范围之外的几何图形标准化，因此它们保持在当前的坐标系内。仅支持Web墨卡托和地理坐标。
         dojoOn, // dojo 事件监听
       ]) => {
         this.SpatialReference = SpatialReference;
@@ -231,12 +231,12 @@ ArcGIS.prototype.init = function init($el) {
         }
 
         function nongyecompany(evtObj) {
-          //对弹窗进行判断
-          var geometry = evtObj.geometry;
-          var symbol;
-          // symbol;
+          // 获取所画图形形状
+          let geometry = evtObj.geometry;
+          let symbol;
+          // 设置查询图形样式
           switch (geometry.type) {
-            case "point":
+            case "point": // 点缓冲区分析
               symbol = new SimpleMarkerSymbol(
                 SimpleMarkerSymbol.STYLE_SQUARE,
                 10,
@@ -248,14 +248,14 @@ ArcGIS.prototype.init = function init($el) {
                 new EsriColor([0, 255, 0, 0.25])
               );
               break;
-            case "polyline":
+            case "polyline": // 先缓冲区分析
               symbol = new SimpleLineSymbol(
                 SimpleLineSymbol.STYLE_DASH,
                 new EsriColor([255, 0, 0]),
                 1
               );
               break;
-            case "polygon":
+            case "polygon": // 面缓冲区分析
               symbol = new SimpleFillSymbol(
                 SimpleFillSymbol.STYLE_NONE,
                 new SimpleLineSymbol(
@@ -267,25 +267,32 @@ ArcGIS.prototype.init = function init($el) {
               );
               break;
           }
-          var graphic = new Graphic(geometry, symbol);
+
+          // 添加查询图形到地图上
+          let graphic = new Graphic(geometry, symbol);
           that.map.graphics.add(graphic);
 
+          // 初始化 Buffer 查询参数
           var params = new BufferParameters();
-          params.distances = ["10"];
+          params.distances = ["2"]; // 默认距离
+          params.unit = GeometryService["UNIT_KILOMETER"]; // 设置缓冲区距离单位
           params.bufferSpatialReference = new SpatialReference({
             wkid: 102100,
-          });
-          params.outSpatialReference = that.map.spatialReference;
-          params.unit = GeometryService["UNIT_KILOMETER"];
+          }); // 设置坐标系（平面坐标系）
+          params.outSpatialReference = that.map.spatialReference; // 设置输出坐标系
+
+          // 将图形进行处理
           NormalizeUtils.normalizeCentralMeridian([geometry]).then(function(
             normalizedGeometries
           ) {
-            var normalizedGeometry = normalizedGeometries[0];
+            let normalizedGeometry = normalizedGeometries[0];
+            // 图形判断
             if (normalizedGeometry.type === "polygon") {
               EsriConfig.defaults.geometryService.simplify(
                 [normalizedGeometry],
                 function(geometries) {
                   params.geometries = geometries;
+
                   EsriConfig.defaults.geometryService.buffer(
                     params,
                     showBuffer1
@@ -300,23 +307,20 @@ ArcGIS.prototype.init = function init($el) {
         }
 
         let showBuffer1 = (bufferedGeometries) => {
-          // var symbol = new SimpleFillSymbol(
-          //   SimpleFillSymbol.STYLE_SOLID,
-          //   new SimpleLineSymbol(
-          //     SimpleLineSymbol.STYLE_SOLID,
-          //     new EsriColor([255, 0, 0, 0.65]),
-          //     2
-          //   ),
-          //   new EsriColor([255, 0, 0, 0.35])
-          // );
+          let symbol2 = new SimpleFillSymbol(
+            SimpleFillSymbol.STYLE_SOLID,
+            new SimpleLineSymbol(
+              SimpleLineSymbol.STYLE_SOLID,
+              new EsriColor([255, 0, 0, 0.65]),
+              2
+            ),
+            new EsriColor([255, 0, 0, 0.35])
+          );
 
-          console.log();
-          const geometries = bufferedGeometries[0].rings[0];
-          console.log(geometries);
-          console.log(that.map);
-
-          geometries.forEach(function(geometry) {
-            console.log(geometry);
+          bufferedGeometries.forEach(function(geometry) {
+            // 添加缓冲区形状
+            let graphic = new Graphic(geometry, symbol2);
+            that.map.graphics.add(graphic);
 
             let graphicBuffer = geometry;
             var BufferTask = QueryTask(
@@ -324,18 +328,23 @@ ArcGIS.prototype.init = function init($el) {
             );
             var Bufferquery = new Query();
             Bufferquery.returnGeometry = true;
-            // var sr1 = new SpatialReference(4490);
+            // 设置坐标系
             graphicBuffer.spatialReference = new SpatialReference(4490);
             Bufferquery.geometry = graphicBuffer;
-            // Bufferquery.geometry = graphicBuffer.setSpatialReference(sr1);
             Bufferquery.outFields = ["*"];
             BufferTask.execute(Bufferquery, showResults);
+
+            function showResults(featureSet) {
+              // that.map.graphics.clear();
+              console.log(featureSet);
+            }
           });
 
-          function showResults(featureSet) {
-            that.map.graphics.clear();
-            console.log(featureSet);
-          }
+          // const geometries = bufferedGeometries[0].rings[0];
+          // console.log(geometries);
+          // console.log(that.map);
+
+          //   console.log(geometry);
         };
       }
     ) //end
