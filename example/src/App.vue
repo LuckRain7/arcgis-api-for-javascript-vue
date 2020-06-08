@@ -38,6 +38,9 @@
       @attributeQueryOnSearch="attributeQueryOnSearch"
       :attributeQueryData="attributeQueryData"
     ></Query>
+
+    <!-- 缓冲区分析内容显示 -->
+    <content-buffer></content-buffer>
   </div>
 </template>
 
@@ -47,14 +50,14 @@ import ToolBar from "./components/ToolBar.vue";
 import Measurement from "./components/Measurement.vue";
 import LayerNavMenu from "./components/LayerNavMenu.vue";
 import Query from "./components/Query.vue";
-import url from "../server.url.config.js";
+import ContentBuffer from "./components/ContentBuffer.vue";
+// import url from "../server.url.config.js";
 
 // 引入 ArcGIS 模块，并进行实例化
 import ArcGIS from "./map/index.js";
 let Map = new ArcGIS();
 export default {
   name: "App",
-
   mounted() {
     Map.init("map"); // 初始化地图模块
   },
@@ -132,6 +135,7 @@ export default {
     Measurement,
     LayerNavMenu,
     Query,
+    ContentBuffer,
   },
 };
 </script>
