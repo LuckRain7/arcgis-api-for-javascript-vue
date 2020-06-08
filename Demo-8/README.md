@@ -9,11 +9,11 @@
 5.  利用 `QueryTask `，传入缓冲区图形进行查询。
 6.  接收查询后结果
 
-代码位置：
+代码位置：[https://github.com/LuckRain7/arcgis-api-for-javascript-vue/blob/master/Demo-8/buffer.js](https://github.com/LuckRain7/arcgis-api-for-javascript-vue/blob/master/Demo-8/buffer.js)
 
 ### **在下图中可以找到 ArcGIS Server中几何服务地址**
 
-![geometry-utilities](C:\Users\ZHCZ\Desktop\arcgis-api-for-javascript-vue\Demo-8\geometry-utilities.png)
+![geometry-utilities](https://luckrain7.github.io/arcgis-api-for-javascript-vue/Demo-8/geometry-utilities.png)
 
 ### **在 src\map\init.js 引入一下模块**
 
@@ -207,7 +207,7 @@ loadModules(
 
 效果：
 
-![buffer](C:\Users\ZHCZ\Desktop\arcgis-api-for-javascript-vue\Demo-8\buffer.gif)
+![buffer](https://luckrain7.github.io/arcgis-api-for-javascript-vue/Demo-8/buffer.gif)
 
 <br>
 
