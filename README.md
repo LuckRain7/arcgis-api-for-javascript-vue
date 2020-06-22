@@ -6,6 +6,8 @@
 
 PS: 代码在边写过程中，不断的改进，可能 example 中的代码与文章中代码会有所出入。欢迎大家提交 Issues。
 
+<span style="color:red;"> 近期会对项目进行一个再整理，主要涉及到代码的开箱即用问题。</span>
+
 ## 目录
 
 [（1）ArcGIS API for JavaScript 本地部署(开发环境)](https://luckrain7.github.io/arcgis-api-for-javascript-vue/Demo-1/)
@@ -23,8 +25,6 @@ PS: 代码在边写过程中，不断的改进，可能 example 中的代码与�
 [（7）热力图分析](https://github.com/LuckRain7/arcgis-api-for-javascript-vue/tree/master/Demo-7)
 
 [（8）缓冲区分析](https://github.com/LuckRain7/arcgis-api-for-javascript-vue/tree/master/Demo-8)
-
-
 
 （9）结合Echarts
 
