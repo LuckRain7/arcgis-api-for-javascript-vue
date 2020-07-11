@@ -1,4 +1,4 @@
-# 🌍Vue + ArcGIS API for JavaScript 教程
+# 🌍 Vue + ArcGIS API for JavaScript 教程
 
 版本信息 vue:2.6.11 | ArcGIS API for JavaScript: 3.32
 
