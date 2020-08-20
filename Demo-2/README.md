@@ -1,8 +1,8 @@
 # vue + ArcGIS 地图应用系列二：加载地图
 
-![](./2.png)
+![](https://raw.githubusercontent.com/LuckRain7/arcgis-api-for-javascript-vue/master/Demo-2/2.png)
 
-## 1.  创建 Vue 项目
+## 1. 创建 Vue 项目
 
 我们利用 Vue-CLI 工具进行快捷创建
 
@@ -29,9 +29,9 @@ yarn serve
 
 访问 http://localhost:8080 ，出现 vue 界面说明项目创建成功。
 
-## 2.  引入 ArcGIS API
+## 2. 引入 ArcGIS API
 
->  因为历史原因，ArcGIS API 使用的 AMD 模块化思想，与 Vue 的模块化思想相冲突。ArcGIS 官方给出了  `esri-loader ` 解决方案，我们使用这个包进行 ArcGIS API 的异步加载
+> 因为历史原因，ArcGIS API 使用的 AMD 模块化思想，与 Vue 的模块化思想相冲突。ArcGIS 官方给出了 `esri-loader` 解决方案，我们使用这个包进行 ArcGIS API 的异步加载
 
 1.  下载 esri-loader
 
@@ -41,7 +41,7 @@ yarn add esri-loader # or: npm i esri-loader -s
 
 2.  配置 ArcGIS API 异步加载地址
 
->  我们在第一讲中讲到的  [ArcGIS API for JavaScript 本地部署(开发环境)](https://luckrain7.github.io/arcgis-api-for-javascript-vue/) 就派上了用场。
+> 我们在第一讲中讲到的 [ArcGIS API for JavaScript 本地部署(开发环境)](https://luckrain7.github.io/arcgis-api-for-javascript-vue/) 就派上了用场。
 
 - 新建一个配置文件 src/map/config.js 配置托管的 API 地址
 
@@ -49,7 +49,7 @@ yarn add esri-loader # or: npm i esri-loader -s
 export default {
   // load配置
   loadConfig: {
-    url: 'http://localhost:3000/arcgis-3.32/init.js', //托管 API 地址
+    url: "http://localhost:3000/arcgis-3.32/init.js", //托管 API 地址
   },
 
   // 初始化位置
@@ -59,7 +59,7 @@ export default {
     120.25643388031263,
     35.52697974396869,
   ],
-}
+};
 ```
 
 3. 在 src/map/init.js 中新建 ArcGIS 加载类
@@ -134,7 +134,6 @@ class ArcGIS {
             sliderPosition: "bottom-right", // 缩小放大按钮位置
           });
           this.map.addLayer(this.baseMap.vectorMap, 0);
-
         }
       ) //end
       .catch((err) => {
@@ -162,7 +161,7 @@ class ArcGIS {
 export default ArcGIS;
 ```
 
-## 3.  创建地图组件并加载地图
+## 3. 创建地图组件并加载地图
 
 1. 引入我们上面创建好的模块，并进行实例化
 2. 执行其中的 init 方法。并传入对应 dom 的 ID
@@ -215,10 +214,8 @@ body {
   }
 }
 </style>
-
 ```
 
-## 4.  效果图
+## 4. 效果图
 
-![](./init.png)
-
+![](https://raw.githubusercontent.com/LuckRain7/arcgis-api-for-javascript-vue/master/Demo-2/init.png)
