@@ -219,3 +219,7 @@ body {
 ## 4. 效果图
 
 ![](https://raw.githubusercontent.com/LuckRain7/arcgis-api-for-javascript-vue/master/Demo-2/init.png)
+
+## Demo-2 完整项目地址
+
+`arcgis-api-for-javascript-vue/Demo-2/example`
