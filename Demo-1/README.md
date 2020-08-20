@@ -1,10 +1,10 @@
-# vue + ArcGIS 地图应用系列一：arcgis api本地部署(开发环境)
+# vue + ArcGIS 地图应用系列一：arcgis api 本地部署(开发环境)
 
-![cover](./arcgis-vue-1.png)
+![cover](https://luckrain7.github.io/arcgis-api-for-javascript-vue/Demo-1/arcgis-vue-1.png)
 
-##   1.  下载 ArcGIS API for JavaScript
+## 1. 下载 ArcGIS API for JavaScript
 
-官网地址： [https://developers.arcgis.com/javascript/3/ ]( https://developers.arcgis.com/javascript/3/ )
+官网地址： [https://developers.arcgis.com/javascript/3/ ](https://developers.arcgis.com/javascript/3/)
 
 下载地址：[http://links.esri.com/javascript-api/latest-download](http://links.esri.com/javascript-api/latest-download)
 
@@ -14,19 +14,17 @@
 
 解压后文件层级很多。
 
-建议大家使用，`arcgis_js_v332_api\arcgis_js_v332_api\arcgis_js_api\library\3.32` 文件夹下`3.32compact` 压缩过的代码（代码是不开源的，直接用压缩的就完事了）。
+建议大家使用，`arcgis_js_v332_api\arcgis_js_v332_api\arcgis_js_api\library\3.32` 文件夹下`3.32compact` 压缩过的代码（代码是不开源的，没必要用不压缩的）。
 
+## 2. 新建静态文件服务器
 
+我自己使用 Express 自己写的一个静态文件服务器（因为要配置跨域，所以习惯了），大家也可以使用 IIS 、Tomcat 等服务器进行搭建。(Express 静态文件服务器放在了 https://github.com/LuckRain7/arcgis-api-for-javascript-vue 仓库中的 static-server 文件中，大家可以去 clone 使用。)
 
-## 2.  新建静态文件服务器
-
-我自己使用 Express 自己写的一个静态文件服务器（因为要配置跨域，所以习惯了），大家也可以使用 IIS 、Tomcat 等服务器进行搭建。(Express静态文件服务器放在了  https://github.com/LuckRain7/arcgis-api-for-javascript-vue 仓库中的  static-server 文件中，大家可以去 clone 使用。)
-
-将 `3.32compact` 文件夹拷贝到  静态文件夹 `public` 下，修改一个自己喜欢的名字，我这里修改为 `arcgis-3.32`
+将 `3.32compact` 文件夹拷贝到 静态文件夹 `public` 下，修改一个自己喜欢的名字，我这里修改为 `arcgis-3.32`
 
 自建静态文件服务器地址为 `http://localhost:3000/`
 
-## 2.  修改 [HOSTNAME_AND_PATH_TO_JSAPI] 路径
+## 2. 修改 [HOSTNAME_AND_PATH_TO_JSAPI] 路径
 
 1、找到以下两个文件
 
@@ -34,11 +32,11 @@
 
 `static-server\public\arcgis-3.32\dojo\dojo.js`
 
-2、用编辑器打开，搜索  [HOSTNAME_AND_PATH_TO_JSAPI]  
+2、用编辑器打开，搜索 [HOSTNAME_AND_PATH_TO_JSAPI]
 
-3、将两个文件中的 `baseUrl ` 内容都改为 `http://localhost:3000/arcgis-3.32/dojo`
+3、将两个文件中的 `baseUrl` 内容都改为 `http://localhost:3000/arcgis-3.32/dojo`
 
-![baseUrl](./baseUrl.png)
+![baseUrl](https://luckrain7.github.io/arcgis-api-for-javascript-vue/Demo-1/baseUrl.png)
 
 ## 3. 测试
 
@@ -47,50 +45,47 @@
 ```html
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>test arcgis </title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>test arcgis</title>
     <style>
-        body,
-        html {
-            margin: 0;
-            padding: 0;
-            height: 100%;
-            width: 100%;
-        }
+      body,
+      html {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        width: 100%;
+      }
 
-        #test {
-            height: 100%;
-            width: 100%;
-        }
+      #test {
+        height: 100%;
+        width: 100%;
+      }
     </style>
-    <link rel="stylesheet" href="http://localhost:3000/arcgis-3.32/esri/css/esri.css">
+    <link
+      rel="stylesheet"
+      href="http://localhost:3000/arcgis-3.32/esri/css/esri.css"
+    />
     <script src="http://localhost:3000/arcgis-3.32/init.js"></script>
-</head>
+  </head>
 
-<body>
-    <div id="test">
-
-    </div>
+  <body>
+    <div id="test"></div>
 
     <script>
-        require(["esri/map"], function (Map) {
-            var map = new Map("test", {
-                center: [-118, 34.5],
-                zoom: 8,
-                basemap: "topo"
-            });
+      require(["esri/map"], function (Map) {
+        var map = new Map("test", {
+          center: [-118, 34.5],
+          zoom: 8,
+          basemap: "topo",
         });
+      });
     </script>
-</body>
-
+  </body>
 </html>
 ```
 
-
-
 您的关注是莫大的鼓励
 
-![wx](./wx.png)
+<img src="https://luckrain7.github.io/arcgis-api-for-javascript-vue/Demo-1/wx.png" width="50%"/>

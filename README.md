@@ -12,7 +12,7 @@ PS: 代码在边写过程中，不断的改进，可能 example 中的代码与�
 
 ## 目录
 
-[（1）ArcGIS API for JavaScript 本地部署(开发环境)](https://luckrain7.github.io/arcgis-api-for-javascript-vue/Demo-1/)
+[（1）ArcGIS API for JavaScript 本地部署(开发环境)](https://github.com/LuckRain7/arcgis-api-for-javascript-vue/tree/master/Demo-1)
 
 [（2）加载地图](https://luckrain7.github.io/arcgis-api-for-javascript-vue/Demo-2/)
 
@@ -28,6 +28,6 @@ PS: 代码在边写过程中，不断的改进，可能 example 中的代码与�
 
 [（8）缓冲区分析](https://github.com/LuckRain7/arcgis-api-for-javascript-vue/tree/master/Demo-8)
 
-（9）结合Echarts
+（9）结合 Echarts
 
 （10）分级设色
