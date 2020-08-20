@@ -1,0 +1,27 @@
+@import "./Header.less"; // 头部导航
+@import "./DivHeader.less"; // div弹窗头部
+@import "./Measurement.less"; // 测量弹窗
+@import "./LayerNavMenu.less"; // 左侧图层导航
+@import "./Query.less"; // 左侧图层导航
+@import "./ContentBuffer"; // 缓冲区查询内容显示窗体
+
+// 设置整体滚动条样式
+*::-webkit-scrollbar {
+  /* 滚动条整体样式 */
+  width: 8px; /*高宽分别对应横竖滚动条的尺寸*/
+  height: 4px;
+  scrollbar-arrow-color: red;
+}
+*::-webkit-scrollbar-thumb {
+  /*滚动条里面小方块*/
+  border-radius: 5px;
+  -webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+  background: rgba(0, 0, 0, 0.2);
+  scrollbar-arrow-color: red;
+}
+*::-webkit-scrollbar-track {
+  /*滚动条里面轨道*/
+  -webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+  border-radius: 0;
+  background: rgba(0, 0, 0, 0.1);
+}

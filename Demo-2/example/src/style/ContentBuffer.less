@@ -1,0 +1,37 @@
+@import "./common/var.less";
+
+@all-height: 500px; // 总高
+@all-width: 300px; // 总宽
+@title-height: 40px; // 标题高
+
+.content-buffer {
+  position: absolute;
+  width: @all-width;
+  height: @all-height;
+  top: 80px;
+  left: 20px;
+  background-color: @background-white;
+  border-radius: 5px;
+  z-index: 99;
+
+  .title {
+    width: @all-width;
+    height: @title-height;
+    line-height: @title-height;
+    text-align: center;
+    background-color: @background-blue;
+    border-radius: 5px 5px 0 0;
+    color: @background-white;
+    font-size: 16px;
+    position: fixed;
+    z-index: 99;
+  }
+
+  .main-content {
+    position: relative;
+    top: @title-height;
+    overflow: auto;
+    height: @all-height - @title-height;
+    margin-left: 10px;
+  }
+}
