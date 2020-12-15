@@ -1,8 +1,11 @@
 <!--
- * @Description: 工具条
- * @Author: LuckRain7
- * @Date: 2020-05-06 16:54:57
- -->
+ * @Author       : 震雨 LuckRain7
+ * @Date         : 2020-08-20 10:44:38
+ * @LastEditTime : 2020-12-15 10:54:45
+ * @Description  : 工具条
+ * @ Love and Peace 
+-->
+
 <template>
   <div class="toolbar">
     <!-- 使用按钮组 -->
@@ -10,12 +13,8 @@
       <!-- 地图切换按钮 -->
       <a-dropdown>
         <a-menu slot="overlay">
-          <a-menu-item key="1" @click="baseMapChange(1)">
-            矢量
-          </a-menu-item>
-          <a-menu-item key="2" @click="baseMapChange(2)">
-            影像
-          </a-menu-item>
+          <a-menu-item key="1" @click="baseMapChange(1)"> 矢量 </a-menu-item>
+          <a-menu-item key="2" @click="baseMapChange(2)"> 影像 </a-menu-item>
         </a-menu>
         <a-button type="primary">
           <a-icon type="global" />底图 <a-icon type="down" />
@@ -25,12 +24,8 @@
 
       <a-dropdown>
         <a-menu slot="overlay">
-          <a-menu-item key="1" @click="measurement(1)">
-            开始测量
-          </a-menu-item>
-          <a-menu-item key="2" @click="measurement(0)">
-            取消测量
-          </a-menu-item>
+          <a-menu-item key="1" @click="measurement(1)"> 开始测量 </a-menu-item>
+          <a-menu-item key="2" @click="measurement(0)"> 取消测量 </a-menu-item>
         </a-menu>
         <a-button type="primary">
           <a-icon type="tool" />测量 <a-icon type="down" />
@@ -40,27 +35,13 @@
       <!-- 标绘 GO-->
       <a-dropdown>
         <a-menu slot="overlay">
-          <a-menu-item key="1" @click="draw('POINT')">
-            点
-          </a-menu-item>
-          <a-menu-item key="2" @click="draw('POLYLINE')">
-            线
-          </a-menu-item>
-          <a-menu-item key="3" @click="draw('POLYGON')">
-            面
-          </a-menu-item>
-          <a-menu-item key="4" @click="draw('CIRCLE')">
-            圆形
-          </a-menu-item>
-          <a-menu-item key="5" @click="draw('RECTANGLE')">
-            长方形
-          </a-menu-item>
-          <a-menu-item key="6" @click="draw('stop')">
-            停止标绘
-          </a-menu-item>
-          <a-menu-item key="7" @click="draw('delete')">
-            清除标绘
-          </a-menu-item>
+          <a-menu-item key="1" @click="draw('POINT')"> 点 </a-menu-item>
+          <a-menu-item key="2" @click="draw('POLYLINE')"> 线 </a-menu-item>
+          <a-menu-item key="3" @click="draw('POLYGON')"> 面 </a-menu-item>
+          <a-menu-item key="4" @click="draw('CIRCLE')"> 圆形 </a-menu-item>
+          <a-menu-item key="5" @click="draw('RECTANGLE')"> 长方形 </a-menu-item>
+          <a-menu-item key="6" @click="draw('stop')"> 停止标绘 </a-menu-item>
+          <a-menu-item key="7" @click="draw('delete')"> 清除标绘 </a-menu-item>
         </a-menu>
         <a-button type="primary">
           <a-icon type="highlight" />标绘 <a-icon type="down" />

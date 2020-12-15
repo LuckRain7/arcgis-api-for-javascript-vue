@@ -1,0 +1,56 @@
+@import "./common/var.less";
+
+@all-height: 500px; // 总高
+@all-width: 300px; // 总宽
+@title-height: 40px; // 标题高
+
+.a-query {
+  position: absolute;
+  width: @all-width;
+  max-height: @all-height;
+  top: 80px;
+  left: @all-width + 30;
+  background-color: @background-white;
+  border-radius: 5px;
+  z-index: 99;
+
+  .title {
+    width: @all-width;
+    height: @title-height;
+    line-height: @title-height;
+    text-align: center;
+    background-color: @background-blue;
+    border-radius: 5px 5px 0 0;
+    color: @background-white;
+    font-size: 16px;
+    position: fixed;
+    z-index: 99;
+
+    .title-icon {
+      position: absolute;
+      right: 10px;
+      float: right;
+      text-align: center;
+      line-height: @title-height;
+      cursor: pointer;
+    }
+  }
+
+  .query-main {
+    position: relative;
+    top: @title-height;
+    overflow: auto;
+    // height: @all-height - @title-height;
+    height: auto;
+    width: @all-width - 30;
+    margin: 10px auto;
+
+    .query-content {
+      //   background: blueviolet;
+      width: 100%;
+      max-height: @all-height - @title-height - 50;
+      padding: 10px 0;
+      overflow: auto;
+    }
+  }
+}

@@ -1,18 +1,7 @@
-<!--
- * @Description:  
- * @Author: LuckRain7
- * @Date: 2020-05-06 11:10:22
- -->
 <template>
   <div id="app">
-    <!-- 头部组件 -->
-    <my-header />
-
-    <!-- 地图主题组件 -->
-    <div class="main">
-      <div id="map"></div>
-    </div>
-
+    <!-- 头部 -->
+    <Header />
     <!-- 工具条组件 -->
     <tool-bar
       @measurement="measurement"
@@ -20,32 +9,43 @@
       @draw="draw"
       @showLegend="showLegend"
       @showLayerList="showLayerList"
-    ></tool-bar>
-
+    >
+    </tool-bar>
     <!-- 测量组件 -->
-    <measurement
-      :show="isShowMeasurement"
-      @closMmeasurement="measurement"
-    ></measurement>
-
-    
+    <Measurement :show="isShowMeasurement" @closMmeasurement="measurement">
+    </Measurement>
+    <!-- 地图部分 -->
+    <div class="main">
+      <div id="map"></div>
+    </div>
   </div>
 </template>
 
 <script>
-import MyHeader from "./components/Header.vue";
-import ToolBar from "./components/ToolBar.vue";
-import Measurement from "./components/Measurement.vue";
+import Header from "@/components/Header.vue"; // 引入头部组件
+import ToolBar from "@/components/ToolBar.vue"; // 工具条组件
+import Measurement from "@/components/Measurement.vue"; // 测量组件
+import ArcGIS from "@/map/index.js";
+const Map = new ArcGIS();
 
-// 引入 ArcGIS 模块，并进行实例化
-import ArcGIS from "./map/index.js";
-let Map = new ArcGIS();
 export default {
   name: "App",
 
-  mounted() {
-    Map.init("map"); // 初始化地图模块
+  components: {
+    Header,
+    ToolBar,
+    Measurement,
   },
+  data() {
+    return {
+      isShowMeasurement: false,
+    };
+  },
+
+  mounted() {
+    Map.init("map");
+  },
+
   methods: {
     // 测量
     measurement(type) {
@@ -58,7 +58,7 @@ export default {
           this.isShowMeasurement = true;
       }
     },
-    /* 地图切换 */
+    // 地图切换
     baseMapChange(type) {
       Map.baseMapChange(type);
     },
@@ -68,22 +68,12 @@ export default {
     },
     // 显示图例
     showLegend() {
-      console.log("开启图例");
+      console.log("显示图例");
     },
     // 显示图层
     showLayerList() {
-      console.log("开启图层");
+      console.log("显示图层");
     },
-  },
-  data() {
-    return {
-      isShowMeasurement: false, // 测量窗口
-    };
-  },
-  components: {
-    MyHeader,
-    ToolBar,
-    Measurement,
   },
 };
 </script>
