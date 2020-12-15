@@ -147,7 +147,6 @@ ArcGIS.prototype.init = function init($el) {
 };
 
 export default ArcGIS;
-
 ```
 
 ## 3. 创建地图组件并加载地图
@@ -156,10 +155,8 @@ export default ArcGIS;
 
 ```javascript
 import ArcGIS from "@/map/init.js";
-const arcgis = new ArcGIS();
+const Map = new ArcGIS();
 ```
-
-
 
 1. 执行其中的 init 方法。并传入对应 dom 的 ID
 
@@ -176,7 +173,7 @@ const arcgis = new ArcGIS();
 <script>
 import Header from "@/components/Header.vue"; // 引入头部组件
 import ArcGIS from "@/map/init.js";
-const arcgis = new ArcGIS();
+const Map = new ArcGIS();
 
 export default {
   name: "App",
@@ -186,7 +183,7 @@ export default {
   },
 
   mounted() {
-    arcgis.init("map");
+    Map.init("map");
   },
 };
 </script>
@@ -221,4 +218,3 @@ body {
 ## Demo-2 完整项目地址
 
 [arcgis-api-for-javascript-vue/Demo-2/example](https://github.com/LuckRain7/arcgis-api-for-javascript-vue/tree/master/Demo-2/example)
-
