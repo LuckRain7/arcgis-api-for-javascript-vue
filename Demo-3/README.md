@@ -1,8 +1,8 @@
 # vue + ArcGIS 地图应用系列三：添加常规的地图组件
 
-> 为了页面的美观，这里我们使用的UI库为： Ant Design Vue 
+> 为了页面的美观，这里我们使用的 UI 库为： Ant Design Vue
 >
-> 项目源码仓库地址：[https://github.com/LuckRain7/arcgis-api-for-javascript-vue ]( https://github.com/LuckRain7/arcgis-api-for-javascript-vue )
+> 项目源码仓库地址：[https://github.com/LuckRain7/arcgis-api-for-javascript-vue ](https://github.com/LuckRain7/arcgis-api-for-javascript-vue)
 
 ## 1. 首先创建工具菜单组件
 
@@ -18,12 +18,8 @@
       <!-- 地图切换按钮 -->
       <a-dropdown>
         <a-menu slot="overlay">
-          <a-menu-item key="1" @click="baseMapChange(1)">
-            矢量
-          </a-menu-item>
-          <a-menu-item key="2" @click="baseMapChange(2)">
-            影像
-          </a-menu-item>
+          <a-menu-item key="1" @click="baseMapChange(1)"> 矢量 </a-menu-item>
+          <a-menu-item key="2" @click="baseMapChange(2)"> 影像 </a-menu-item>
         </a-menu>
         <a-button type="primary">
           <a-icon type="global" />底图 <a-icon type="down" />
@@ -33,12 +29,8 @@
 
       <a-dropdown>
         <a-menu slot="overlay">
-          <a-menu-item key="1" @click="measurement(1)">
-            开始测量
-          </a-menu-item>
-          <a-menu-item key="2" @click="measurement(0)">
-            取消测量
-          </a-menu-item>
+          <a-menu-item key="1" @click="measurement(1)"> 开始测量 </a-menu-item>
+          <a-menu-item key="2" @click="measurement(0)"> 取消测量 </a-menu-item>
         </a-menu>
         <a-button type="primary">
           <a-icon type="tool" />测量 <a-icon type="down" />
@@ -48,27 +40,13 @@
       <!-- 标绘 GO-->
       <a-dropdown>
         <a-menu slot="overlay">
-          <a-menu-item key="1" @click="draw('POINT')">
-            点
-          </a-menu-item>
-          <a-menu-item key="2" @click="draw('POLYLINE')">
-            线
-          </a-menu-item>
-          <a-menu-item key="3" @click="draw('POLYGON')">
-            面
-          </a-menu-item>
-          <a-menu-item key="4" @click="draw('CIRCLE')">
-            圆形
-          </a-menu-item>
-          <a-menu-item key="5" @click="draw('RECTANGLE')">
-            长方形
-          </a-menu-item>
-          <a-menu-item key="6" @click="draw('stop')">
-            停止标绘
-          </a-menu-item>
-          <a-menu-item key="7" @click="draw('delete')">
-            清除标绘
-          </a-menu-item>
+          <a-menu-item key="1" @click="draw('POINT')"> 点 </a-menu-item>
+          <a-menu-item key="2" @click="draw('POLYLINE')"> 线 </a-menu-item>
+          <a-menu-item key="3" @click="draw('POLYGON')"> 面 </a-menu-item>
+          <a-menu-item key="4" @click="draw('CIRCLE')"> 圆形 </a-menu-item>
+          <a-menu-item key="5" @click="draw('RECTANGLE')"> 长方形 </a-menu-item>
+          <a-menu-item key="6" @click="draw('stop')"> 停止标绘 </a-menu-item>
+          <a-menu-item key="7" @click="draw('delete')"> 清除标绘 </a-menu-item>
         </a-menu>
         <a-button type="primary">
           <a-icon type="highlight" />标绘 <a-icon type="down" />
@@ -144,20 +122,20 @@ export default {
 import ToolBar from "@/components/ToolBar.vue";
 export default {
   components: {
-    ToolBar
+    ToolBar,
   },
   methods: {
     // 测量
     measurement(type) {
-			console.log("测量",type);
+      console.log("测量", type);
     },
     // 地图切换
     baseMapChange(type) {
-      console.log("地图切换",type);
+      console.log("地图切换", type);
     },
     // 标绘
     draw(type) {
-      console.log("标绘",type);
+      console.log("标绘", type);
     },
     // 显示图例
     showLegend() {
@@ -176,9 +154,7 @@ export default {
 
 ![](./toolbar.png)
 
-
-
-## 1.  底图切换
+## 1. 底图切换
 
 新建文件 src/map/modules/BaseMap.js ，添加底图切换函数
 
@@ -230,11 +206,7 @@ baseMapChange(type) {
 
 ![](./basemapchange.gif)
 
-
-
-
-
-## 2.  测量组件
+## 2. 测量组件
 
 这里需要在 src\map\init.js 中加载 ArcGIS 的测量和单位模块(`"esri/dijit/Measurement"`、` "esri/units"`)
 
@@ -331,31 +303,31 @@ export default {
 
 ```vue
 <template>
-<!-- 测量组件 -->
-<measurement
-  :show="isShowMeasurement"
-  @closMmeasurement="measurement"
-></measurement>
+  <!-- 测量组件 -->
+  <measurement
+    :show="isShowMeasurement"
+    @closMmeasurement="measurement"
+  ></measurement>
 </template>
 <script>
-  data() {
-    return {
-      isShowMeasurement: false,
-    };
+data() {
+  return {
+    isShowMeasurement: false,
+  };
+},
+methods: {
+  // 测量
+  measurement(type) {
+    switch (type) {
+      case 0:
+        this.isShowMeasurement = false;
+        Map.MeasurementClose();
+        break;
+      case 1:
+        this.isShowMeasurement = true;
+    }
   },
-  methods: {
-    // 测量
-    measurement(type) {
-      switch (type) {
-        case 0:
-          this.isShowMeasurement = false;
-          Map.MeasurementClose();
-          break;
-        case 1:
-          this.isShowMeasurement = true;
-      }
-    },
-  }
+}
 </script>
 ```
 
@@ -363,9 +335,7 @@ export default {
 
 ![](./measurement .gif)
 
-
-
-## 3.  比例尺组件
+## 3. 比例尺组件
 
 这里需要在 example/src/map/init.js 中加载 ArcGIS 的比例尺模块(`"esri/dijit/Scalebar"`)
 
@@ -395,8 +365,6 @@ Scalebar({
 });
 ```
 
-
-
 ## 4. 标绘组件
 
 非常抱歉，写到这里时我重构了代码，大家可以去代码仓库进行查看，重构的目的是为了更加的模块化。
@@ -415,23 +383,23 @@ loadModules(
     "esri/layers/GraphicsLayer", // 图形图层模块
   ],
   config.loadConfig
-)
-  .then(
-    ([
-      Draw, // 画图
-      SimpleMarkerSymbol, // 点
-      SimpleLineSymbol, // 线
-      SimpleFillSymbol, // 面
-      Graphic, // 图形模块
-      GraphicsLayer, // 图形图层模块
-    ]) => {
-      this.GraphicsLayer = GraphicsLayer;
-      this.Graphic = Graphic;
-      this.Draw = Draw;
-      this.SimpleMarkerSymbol = SimpleMarkerSymbol;
-      this.SimpleLineSymbol = SimpleLineSymbol;
-      this.SimpleFillSymbol = SimpleFillSymbol;
-    })
+).then(
+  ([
+    Draw, // 画图
+    SimpleMarkerSymbol, // 点
+    SimpleLineSymbol, // 线
+    SimpleFillSymbol, // 面
+    Graphic, // 图形模块
+    GraphicsLayer, // 图形图层模块
+  ]) => {
+    this.GraphicsLayer = GraphicsLayer;
+    this.Graphic = Graphic;
+    this.Draw = Draw;
+    this.SimpleMarkerSymbol = SimpleMarkerSymbol;
+    this.SimpleLineSymbol = SimpleLineSymbol;
+    this.SimpleFillSymbol = SimpleFillSymbol;
+  }
+);
 ```
 
 example/src/map/modules/Draw.js 编写对应代码
@@ -459,7 +427,7 @@ function drawInit() {
 
   // 添加画图的监听事件
   this.draw.on("draw-complete", drawEndEvent.bind(this));
-};
+}
 
 // 内置函数 画完后将图形加载到图形图层
 function drawEndEvent(evt) {
@@ -511,7 +479,6 @@ function drawActive(type) {
 }
 
 export { drawInit, drawActive };
-
 ```
 
 在 导出文件中引入 src\map\index.js
@@ -527,8 +494,8 @@ ArcGIS.prototype.drawActive = drawActive;
 在 src/map/init.js 初始化标绘工具
 
 ```javascript
-  // 初始化标绘工具
-  this.drawInit();
+// 初始化标绘工具
+this.drawInit();
 ```
 
 在 src/App.vue 中 设置标绘按钮函数
@@ -542,17 +509,19 @@ ArcGIS.prototype.drawActive = drawActive;
   },
 ```
 
-
-
 效果图：
 
 ![](./draw.gif)
 
-##  推荐阅读
+## 源码地址
+
+[Demo-3/example](https://github.com/LuckRain7/arcgis-api-for-javascript-vue/tree/master/Demo-3/example)
+
+## 推荐阅读
 
 - [vue + ArcGIS 地图应用系列二：加载地图](https://mp.weixin.qq.com/s/KkTU1Y1GHLmsslTlwxGeIw)
 
-- [vue + ArcGIS 地图应用系列一：arcgis api本地部署(开发环境)](https://mp.weixin.qq.com/s/F2eseCDNGBjoTS52UsY9MA)
+- [vue + ArcGIS 地图应用系列一：arcgis api 本地部署(开发环境)](https://mp.weixin.qq.com/s/F2eseCDNGBjoTS52UsY9MA)
 
 ## 关注我！ 不迷路
 
