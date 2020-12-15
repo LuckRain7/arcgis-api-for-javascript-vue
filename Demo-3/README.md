@@ -511,7 +511,7 @@ this.drawInit();
 
 效果图：
 
-![](./draw.gif)
+![](https://raw.githubusercontent.com/LuckRain7/arcgis-api-for-javascript-vue/master/Demo-3/draw.gif)
 
 ## 源码地址
 
