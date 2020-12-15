@@ -181,4 +181,5 @@ body {
 
 ## Demo-2 完整项目地址
 
-`arcgis-api-for-javascript-vue/Demo-2/example`
+[arcgis-api-for-javascript-vue/Demo-2/example](https://github.com/LuckRain7/arcgis-api-for-javascript-vue/tree/master/Demo-2/example)
+
