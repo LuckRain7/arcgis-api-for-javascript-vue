@@ -62,32 +62,38 @@ export default {
 };
 ```
 
-3. 在 src/map/init.js 中新建 ArcGIS 加载类
+## 3. 创建地图组件并加载地图
 
-代码如下
+1. 引入我们上面创建好的模块，在钩子函数 `mounted` 中编写对应的代码
 
-```javascript
-/* eslint-disable no-unused-vars */
-/*
- *  Description: arcgis地图部分
- *  Author: LuckRain7
- *  Date: 2020-04-28 20:44:49
- */
+```vue
+<template>
+  <div id="app">
+    <Header />
+    <div class="main">
+      <div id="map"></div>
+    </div>
+  </div>
+</template>
 
+<script>
+import Header from "@/components/Header.vue"; // 引入头部组件
 import { loadModules, loadCss } from "esri-loader"; // 异步加载模块
-import config from "./config"; // 配置项
-import { DataType } from "../utils/index"; // 工具函数
+import config from "@/map/config.js"; // 配置项
 
-class ArcGIS {
-  constructor() {
-    this.map = null; // 地图
-    this.baseMap = null; // 地图底图
-  }
+export default {
+  name: "App",
 
-  init($el) {
+  components: {
+    Header,
+  },
+
+  mounted() {
     // 加载地图必备样式文件
     loadCss("http://localhost:3000/arcgis-3.32/esri/css/esri.css");
     loadCss("http://localhost:3000/arcgis-3.32/dijit/themes/claro/claro.css");
+
+    // 异步加载对应 js 模块
     loadModules(
       [
         "esri/map",
@@ -110,7 +116,8 @@ class ArcGIS {
           SpatialReference, // 坐标系模块
           Parser, // 样式解析模块
         ]) => {
-          this.baseMap = {
+          // 设置地图地图图层
+          let baseMap = {
             vectorMap: new SDTDTLayer(), //矢量地图
             rasterMap: new SDRasterLayer(), //影像地图
             rasterMapAnnotation: new SDRSAnnoLayer(), //影像注记
@@ -125,70 +132,22 @@ class ArcGIS {
             new SpatialReference({ wkid: 4490 })
           );
 
-          //加载地图
-          this.map = new Map($el, {
+          // 添加地图实例
+          let map = new Map("map", {
             extent: startExtent, // 初始化位置
             zoom: 10, // 缩放级别
             logo: false, // esri logo
             maxZoom: 18, // 最大缩放级别
             sliderPosition: "bottom-right", // 缩小放大按钮位置
           });
-          this.map.addLayer(this.baseMap.vectorMap, 0);
+
+          // 将图层添加到地图实例上
+          map.addLayer(baseMap.vectorMap, 0);
         }
       ) //end
       .catch((err) => {
         console.error(err);
       });
-  }
-
-  /*
-   *  description:  添加图层
-   *  param {Layer,Array<Layer>} layer  需添加的图层
-   *  param {number,Array<number>} lever 添加图层的层数
-   */
-  addLayer(layer, lever) {
-    // 判断是都为数组
-    if (DataType(layer, "array")) {
-      layer.forEach((item, index) => {
-        lever ? this.map.addLayer(item, lever[index]) : this.map.addLayer(item);
-      });
-    } else {
-      lever ? this.map.addLayer(layer, lever) : this.map.addLayer(layer);
-    }
-  }
-}
-
-export default ArcGIS;
-```
-
-## 3. 创建地图组件并加载地图
-
-1. 引入我们上面创建好的模块，并进行实例化
-2. 执行其中的 init 方法。并传入对应 dom 的 ID
-
-```vue
-<template>
-  <div id="app">
-    <Header />
-    <div class="main">
-      <div id="map"></div>
-    </div>
-  </div>
-</template>
-
-<script>
-import Header from "./components/Header.vue";
-
-// 引入 ArcGIS 模块，并进行实例化
-import ArcGIS from "./map/init.js";
-let Map = new ArcGIS();
-export default {
-  name: "App",
-  components: {
-    Header,
-  },
-  mounted() {
-    Map.init("map"); // 初始化地图模块
   },
 };
 </script>
