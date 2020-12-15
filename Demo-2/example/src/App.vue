@@ -10,7 +10,7 @@
 <script>
 import Header from "@/components/Header.vue"; // 引入头部组件
 import ArcGIS from "@/map/init.js";
-const arcgis = new ArcGIS();
+const Map = new ArcGIS();
 
 export default {
   name: "App",
@@ -20,7 +20,7 @@ export default {
   },
 
   mounted() {
-    arcgis.init("map");
+    Map.init("map");
   },
 };
 </script>

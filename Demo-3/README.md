@@ -127,51 +127,48 @@ export default {
 </style>
 ```
 
-在 src\App.vue 显示页面引入，并提供组件通讯接口
+在 src\App.vue 显示页面引入，并提供组件通讯接口（下面代码为增量代码）
 
 ```vue
 <template>
-<!-- 工具条组件 -->
-<tool-bar
-  @measurement="measurement"
-  @baseMapChange="baseMapChange"
-  @draw="draw"
-  @showLegend="showLegend"
-  @showLayerList="showLayerList"
-></tool-bar>
-
-<!-- 测量组件 -->
-<measurement
-  :show="isShowMeasurement"
-  @closMmeasurement="measurement"
-></measurement>
+  <!-- 工具条组件 -->
+  <tool-bar
+    @measurement="measurement"
+    @baseMapChange="baseMapChange"
+    @draw="draw"
+    @showLegend="showLegend"
+    @showLayerList="showLayerList"
+  ></tool-bar>
 </template>
 <script>
-import ToolBar from "./components/ToolBar.vue";
-components: {
-  ToolBar
-},
-methods: {
-  // 测量
-  measurement(type) {
-    switch (type) {
-      case 0:
-        this.isShowMeasurement = false;
-        Map.MeasurementClose();
-        break;
-      case 1:
-        this.isShowMeasurement = true;
-    }
+import ToolBar from "@/components/ToolBar.vue";
+export default {
+  components: {
+    ToolBar
   },
-  /* 地图切换 */
-  baseMapChange(type) {
-    Map.baseMapChange(type);
+  methods: {
+    // 测量
+    measurement(type) {
+			console.log("测量",type);
+    },
+    // 地图切换
+    baseMapChange(type) {
+      console.log("地图切换",type);
+    },
+    // 标绘
+    draw(type) {
+      console.log("标绘",type);
+    },
+    // 显示图例
+    showLegend() {
+      console.log("显示图例");
+    },
+    // 显示图层
+    showLayerList() {
+      console.log("显示图层");
+    },
   },
-  // 标绘
-  draw(type) {
-    Map.drawActive(type);
-  },
-},
+};
 </script>
 ```
 
@@ -183,16 +180,18 @@ methods: {
 
 ## 1.  底图切换
 
-在 example\src\map\init.js 文件中添加底图切换函数
+新建文件 src/map/modules/BaseMap.js ，添加底图切换函数
 
 当约定的 Type = 1 时，使用 `addLayer` 方法添加矢量图层并移除影像图层
 
 当约定的 Type = 2 时，使用 `addLayer` 方法添加影像图层并移除矢量图层
 
-ps: `addLayer`方法是对 `map.addLayer() `的二次封装
+ps: `addLayer`方法是对 `map.addLayer() `的二次封装 文件地址: src/map/modules/LayerControl.js
 
 ```javascript
-baseMapChange(type) {
+const name = "baseMapChange";
+
+function baseMapChange(type) {
   if (type === this.baseMap.type) return; // 防止重复加载
 
   // 添加 影像
@@ -214,6 +213,8 @@ baseMapChange(type) {
     this.baseMap.type = 1;
   }
 }
+
+export { name, baseMapChange };
 ```
 
 在 example\src\App.vue 中进行应用
@@ -269,9 +270,10 @@ loadModules(
     ])
 ```
 
-并进行相关配置 example\src\map\init.js（以下是增量代码，不是文件中实际位置）
+并进行相关配置 （以下是增量代码，不是文件中实际位置）
 
 ```javascript
+# example\src\map\init.js 中新增
 // 测量工具初始化
 this.measurement = new Measurement(
   {
@@ -283,6 +285,7 @@ this.measurement = new Measurement(
 );
 this.measurement.startup();
 
+# example/src/map/modules/Measurement.js
 // 关闭测量工具
 MeasurementClose() {
   this.measurement.clearResult(); // 清除地图图案
@@ -290,9 +293,13 @@ MeasurementClose() {
   this.measurement.getTool() &&
     this.measurement.setTool(this.measurement.getTool().toolName, false);
 }
+
+# example/src/map/index.js 进行注册
+import { MeasurementClose } from "./modules/Measurement.js";
+ArcGIS.prototype.MeasurementClose = MeasurementClose;
 ```
 
-创建一个用来展示测量组件 src\components\Measurement.vue
+创建一个用来展示测量组件 example/src/components/Measurement.vue
 
 ```vue
 <template>
@@ -320,7 +327,7 @@ export default {
 </script>
 ```
 
-在页面中引入 src\App.vue
+在页面中引入 src\App.vue （增量添加）
 
 ```vue
 <template>
@@ -331,6 +338,11 @@ export default {
 ></measurement>
 </template>
 <script>
+  data() {
+    return {
+      isShowMeasurement: false,
+    };
+  },
   methods: {
     // 测量
     measurement(type) {
@@ -355,7 +367,7 @@ export default {
 
 ## 3.  比例尺组件
 
-这里需要在 src\map\init.js 中加载 ArcGIS 的比例尺模块(`"esri/dijit/Scalebar"`)
+这里需要在 example/src/map/init.js 中加载 ArcGIS 的比例尺模块(`"esri/dijit/Scalebar"`)
 
 ps: 模块与下方的导出函数一定要一一对应
 
@@ -389,70 +401,65 @@ Scalebar({
 
 非常抱歉，写到这里时我重构了代码，大家可以去代码仓库进行查看，重构的目的是为了更加的模块化。
 
-这里需要在 src\map\modules\draw.js 中加载 ArcGIS 的画图模块、点样式模块、线样式模块、填充样式模块、图形模块和图形图层模块(`"esri/toolbars/draw"`、`"esri/symbols/SimpleMarkerSymbol"`、`"esri/symbols/SimpleLineSymbol"`、`"esri/symbols/SimpleFillSymbol"`、`"esri/graphic"`、`"esri/layers/GraphicsLayer"`)
+这里需要在 example/src/map/init.js 中加载 ArcGIS 的画图模块、点样式模块、线样式模块、填充样式模块、图形模块和图形图层模块(`"esri/toolbars/draw"`、`"esri/symbols/SimpleMarkerSymbol"`、`"esri/symbols/SimpleLineSymbol"`、`"esri/symbols/SimpleFillSymbol"`、`"esri/graphic"`、`"esri/layers/GraphicsLayer"`)
+
+```js
+loadModules(
+  [
+    // --- 标绘 ---
+    "esri/toolbars/draw", // 画图
+    "esri/symbols/SimpleMarkerSymbol", // 点
+    "esri/symbols/SimpleLineSymbol", // 线
+    "esri/symbols/SimpleFillSymbol", // 面
+    "esri/graphic", // 图形模块
+    "esri/layers/GraphicsLayer", // 图形图层模块
+  ],
+  config.loadConfig
+)
+  .then(
+    ([
+      Draw, // 画图
+      SimpleMarkerSymbol, // 点
+      SimpleLineSymbol, // 线
+      SimpleFillSymbol, // 面
+      Graphic, // 图形模块
+      GraphicsLayer, // 图形图层模块
+    ]) => {
+      this.GraphicsLayer = GraphicsLayer;
+      this.Graphic = Graphic;
+      this.Draw = Draw;
+      this.SimpleMarkerSymbol = SimpleMarkerSymbol;
+      this.SimpleLineSymbol = SimpleLineSymbol;
+      this.SimpleFillSymbol = SimpleFillSymbol;
+    })
+```
+
+example/src/map/modules/Draw.js 编写对应代码
 
 ```javascript
-/*
- *  Description: 标绘工具
- *  Author: LuckRain7
- *  Date: 2020-05-07 17:05:55
- */
-import { loadModules } from "esri-loader";
-import config from "../config";
-
 function drawInit() {
-  loadModules(
-    [
-      "esri/toolbars/draw", // 画图
-      "esri/symbols/SimpleMarkerSymbol", // 点
-      "esri/symbols/SimpleLineSymbol", // 线
-      "esri/symbols/SimpleFillSymbol", // 面
-      "esri/graphic", // 图形模块
-      "esri/layers/GraphicsLayer", // 图形图层模块
-    ],
-    config.loadConfig
-  )
-    .then(
-      ([
-        Draw,
-        SimpleMarkerSymbol,
-        SimpleLineSymbol,
-        SimpleFillSymbol,
-        Graphic,
-        GraphicsLayer,
-      ]) => {
-        this.GraphicsLayer = GraphicsLayer;
-        this.Graphic = Graphic;
-        this.Draw = Draw;
-        this.SimpleMarkerSymbol = SimpleMarkerSymbol;
-        this.SimpleLineSymbol = SimpleLineSymbol;
-        this.SimpleFillSymbol = SimpleFillSymbol;
+  // 添加图形图层
+  this.DrawGraphics = new this.GraphicsLayer({ id: "drawLayer" });
 
-        // 添加图形图层
-        this.DrawGraphics = new GraphicsLayer({ id: "drawLayer" });
-        // 设置图层坐标系
-        this.DrawGraphics.SpatialReference = new this.SpatialReference({
-          wkid: 4490,
-        });
-        // 将图层加载到地图上，图层设置为 7
-        this.map.addLayer(this.DrawGraphics, 7);
+  // 设置图层坐标系
+  this.DrawGraphics.SpatialReference = new this.SpatialReference({
+    wkid: 4490,
+  });
 
-        // 实例化画图
-        this.draw = new Draw(this.map);
+  // 将图层加载到地图上，图层设置为 7
+  this.map.addLayer(this.DrawGraphics, 7);
 
-        //定义图形样式
-        this.draw.markerSymbol = new SimpleMarkerSymbol();
-        this.draw.lineSymbol = new SimpleLineSymbol();
-        this.draw.fillSymbol = new SimpleFillSymbol();
+  // 实例化画图
+  this.draw = new this.Draw(this.map);
 
-        // 添加画图的监听事件
-        this.draw.on("draw-complete", drawEndEvent.bind(this));
-      }
-    )
-    .catch((err) => {
-      console.error(err);
-    });
-}
+  // 定义图形样式（自定义）(不定义则使用默认样式)
+  // this.draw.markerSymbol = new this.SimpleMarkerSymbol();
+  // this.draw.lineSymbol = new this.SimpleLineSymbol();
+  // this.draw.fillSymbol = new this.SimpleFillSymbol();
+
+  // 添加画图的监听事件
+  this.draw.on("draw-complete", drawEndEvent.bind(this));
+};
 
 // 内置函数 画完后将图形加载到图形图层
 function drawEndEvent(evt) {
@@ -471,7 +478,7 @@ function drawEndEvent(evt) {
   this.DrawGraphics.add(tx);
 }
 
-// 设置说话图形
+// 设置所画图形
 function drawActive(type) {
   let tool = null;
   switch (type) {
@@ -504,30 +511,49 @@ function drawActive(type) {
 }
 
 export { drawInit, drawActive };
+
 ```
 
 在 导出文件中引入 src\map\index.js
 
 ```javascript
-import { MeasurementClose } from "./modules/Measurement.js";
+import { drawInit, drawActive } from "./modules/Draw.js";
 
-// 导入标绘功能
+// 标绘
 ArcGIS.prototype.drawInit = drawInit;
 ArcGIS.prototype.drawActive = drawActive;
 ```
 
-在组件中使用即可
+在 src/map/init.js 初始化标绘工具
+
+```javascript
+  // 初始化标绘工具
+  this.drawInit();
+```
+
+在 src/App.vue 中 设置标绘按钮函数
+
+```javascript
+  methods: {
+    // 标绘
+    draw(type) {
+      Map.drawActive(type);
+    }
+  },
+```
+
+
 
 效果图：
 
 ![](./draw.gif)
 
-####  推荐阅读
+##  推荐阅读
 
 - [vue + ArcGIS 地图应用系列二：加载地图](https://mp.weixin.qq.com/s/KkTU1Y1GHLmsslTlwxGeIw)
 
 - [vue + ArcGIS 地图应用系列一：arcgis api本地部署(开发环境)](https://mp.weixin.qq.com/s/F2eseCDNGBjoTS52UsY9MA)
 
-#### 关注我！ 不迷路
+## 关注我！ 不迷路
 
 ![](./wx.png)
